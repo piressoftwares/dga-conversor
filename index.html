@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DGA Conversor — converta arrastando, no Windows</title>
+<meta name="description" content="Arraste um arquivo, aperte Shift e solte no formato. O DGA Conversor converte imagens, vídeos, áudios, PDFs, documentos e planilhas no seu Windows, sem internet, e salva ao lado do original.">
+<meta property="og:title" content="DGA Conversor">
+<meta property="og:description" content="Arraste, aperte Shift, solte no formato. Converte no seu Windows, sem enviar nada.">
+<meta property="og:image" content="assets/ui/roda-imagem.png">
+<link rel="icon" href="assets/icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="bar" aria-label="Seções">
+  <a href="#como-funciona">Como funciona</a>
+  <a href="#ao-lado">Arquivo novo</a>
+  <a href="#recursos">Recursos</a>
+  <a href="#formatos">Formatos</a>
+  <a class="btn" href="#baixar">Baixar</a>
+</nav>
+
+<div class="split">
+  <!-- Palco fixo: a roda do app, interativa. Cada seção à direita "aperta" uma tecla. -->
+  <aside class="stage" id="stage" aria-label="Demonstração da roda">
+    <div class="field" data-ui>
+      <p class="hint" id="hint">Arraste um arquivo até a roda e segure <kbd>Shift</kbd>.</p>
+      <div class="wheel-wrap" id="wheelWrap">
+        <img class="wheel-static" src="assets/ui/roda-imagem.png" width="500" height="540" alt="A roda de formatos do DGA Conversor para uma imagem: JPG, PNG, WEBP, HEIC, TIFF, AVIF, BMP, ICO e PDF.">
+        <svg id="wheel" viewBox="-260 -260 520 520" aria-hidden="true"></svg>
+        <div class="toast" id="toast" role="status" aria-live="polite">
+          <b id="toastTitle"></b><span id="toastLine"></span><i><u id="toastFill"></u></i>
+        </div>
+        <div class="folder" id="folderView" hidden></div>
+      </div>
+      <div class="keys" id="keys" role="group" aria-label="Rodas">
+        <button type="button" data-mode="convert" class="on"><kbd>⇧ Shift</kbd> Converter</button>
+        <button type="button" data-mode="tools"><kbd>Ctrl</kbd> Ferramentas</button>
+        <button type="button" data-mode="actions"><kbd>Alt</kbd> Ações</button>
+      </div>
+      <div class="desk" id="desk" aria-label="Arquivos de exemplo">
+        <button type="button" class="file" data-name="viagem.heic" data-size="2,1 MB">viagem.heic</button>
+        <button type="button" class="file" data-name="entrevista.wav" data-size="38,4 MB">entrevista.wav</button>
+        <button type="button" class="file" data-name="contrato.docx" data-size="86 KB">contrato.docx</button>
+        <button type="button" class="file" data-name="clipe.mp4" data-size="24,7 MB">clipe.mp4</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="col">
+    <section class="hero" data-scene="demo">
+      <p class="lede">Arraste um arquivo, aperte Shift e solte no formato. O convertido aparece ao lado do original.</p>
+      <p class="get">
+        <a class="btn big" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
+        <span>Windows 10 e 11, 64 bits · 277 MB · versão 1.0.0</span>
+      </p>
+      <h1 class="mark" aria-label="DGA Conversor">dga conversor</h1>
+    </section>
+
+    <section id="como-funciona" class="steps">
+      <h2>Três gestos</h2>
+      <div class="step" data-scene="step1">
+        <p class="say">Arraste um arquivo. De qualquer pasta.</p>
+        <p>Do Explorer, da área de trabalho, de um e-mail baixado. O app fica na bandeja e não precisa ser aberto.</p>
+        <img class="phone-only" src="assets/ui/roda-documento.png" width="500" height="540" alt="" loading="lazy">
+      </div>
+      <div class="step" data-scene="step2">
+        <p class="say">No meio do arraste, aperte Shift.</p>
+        <p>A roda abre sob o cursor com os formatos daquele arquivo. Ctrl troca para as ferramentas e Alt para as ações. Pode soltar a tecla: a roda continua aberta.</p>
+        <img class="phone-only" src="assets/ui/roda-audio.png" width="500" height="540" alt="" loading="lazy">
+      </div>
+      <div class="step" data-scene="step3">
+        <p class="say">Solte em cima do formato.</p>
+        <p>Parou num gomo, um segundo anel mostra as opções: qualidade, tamanho, dpi. Soltou, converteu. Um aviso pequeno mostra o andamento e some.</p>
+        <img class="phone-only" src="assets/ui/aviso-salvo.png" width="500" height="175" alt="" loading="lazy">
+      </div>
+    </section>
+
+    <section id="ao-lado" class="beside" data-scene="folder">
+      <h2>Nasce ao lado do original</h2>
+      <p class="intro">Mesma pasta, mesmo nome, extensão nova. Se o nome já existir, vira “contrato (1).pdf”. O arquivo original nunca é sobrescrito, movido ou apagado.</p>
+      <div class="outputs" id="outputs" role="tablist" aria-label="Exemplos de saída">
+        <button type="button" role="tab" aria-selected="true" data-from="viagem.heic" data-to="viagem.jpg" data-a="2,1 MB" data-b="3,4 MB">viagem.jpg</button>
+        <button type="button" role="tab" aria-selected="false" data-from="contrato.docx" data-to="contrato.pdf" data-a="86 KB" data-b="212 KB">contrato.pdf</button>
+        <button type="button" role="tab" aria-selected="false" data-from="entrevista.wav" data-to="entrevista.mp3" data-a="38,4 MB" data-b="7,2 MB">entrevista.mp3</button>
+        <button type="button" role="tab" aria-selected="false" data-from="vendas.xlsx" data-to="vendas - Março.csv" data-a="41 KB" data-b="9 KB">vendas - Março.csv</button>
+        <button type="button" role="tab" aria-selected="false" data-from="clipe.mp4" data-to="clipe.gif" data-a="24,7 MB" data-b="5,8 MB">clipe.gif</button>
+      </div>
+    </section>
+
+    <section id="recursos" class="features">
+      <h2>O que mais cabe na roda</h2>
+
+      <article class="mod" data-scene="tools">
+        <figure class="panel"><img src="assets/ui/roda-ferramentas-video.png" width="500" height="540" alt="Roda de ferramentas para vídeo: Comprimir, Cortar, Dividir, Juntar, Recortar, Girar, Sem áudio, Velocidade, Redimensionar e ZIP." loading="lazy"></figure>
+        <h3>26 ferramentas no Ctrl</h3>
+        <p>Comprimir, cortar um trecho, dividir em partes, juntar vários em um, recortar em 1:1, 16:9 ou 9:16, girar, mudar a velocidade, tirar o som, normalizar o volume, remover silêncios.</p>
+        <p>Cada tipo de arquivo mostra só as ferramentas que fazem sentido para ele.</p>
+      </article>
+
+      <article class="mod" data-scene="pdf">
+        <figure class="panel"><img src="assets/ui/form-paginas.png" width="400" height="300" alt="Cartão do app pedindo as páginas a extrair de um PDF, com o valor 1 e os botões Cancelar e Aplicar." loading="lazy"></figure>
+        <h3>PDF de verdade</h3>
+        <p>Juntar num PDF só arquivos misturados (PDFs, fotos, documentos, apresentações e planilhas), dividir, girar, extrair ou remover páginas, numerar no rodapé, aplicar marca d’água e comprimir. Quando falta um detalhe, um cartão pergunta na hora: quais páginas, que texto.</p>
+        <p>Também converte PDF em DOCX, PPTX, XLSX, EPUB, Markdown, texto e imagens a 300 dpi.</p>
+      </article>
+
+      <article class="mod" data-scene="doc">
+        <figure class="panel"><img src="assets/ui/roda-documento.png" width="500" height="540" alt="Roda de conversão para documento: PDF, DOCX, ODT, MD, TXT, EPUB e HTML." loading="lazy"></figure>
+        <h3>Documentos com o layout do original</h3>
+        <p>O LibreOffice vem dentro do instalador. Word, ODT, RTF e Markdown viram PDF, DOCX, EPUB ou HTML com fontes, tabelas e margens no lugar.</p>
+        <p>Planilhas e apresentações também: XLSX, ODS, CSV, PPTX e slides em imagem.</p>
+      </article>
+
+      <article class="mod" data-scene="actions">
+        <figure class="panel"><img src="assets/ui/roda-acoes.png" width="500" height="540" alt="Roda de ações: Compartilhar, Flutuar, Copiar, Mover, Copiar caminho e Terminal." loading="lazy"></figure>
+        <h3>Ações no Alt, até para pastas</h3>
+        <p>Compartilhar pelo Windows, deixar flutuando num cantinho para soltar depois, copiar, mover para outra pasta, copiar o caminho ou abrir o terminal ali.</p>
+        <p>Funciona com pastas e com seleções misturadas.</p>
+      </article>
+
+      <article class="mod" data-scene="convert">
+        <figure class="panel"><img src="assets/ui/aviso-progresso.png" width="400" height="140" alt="Aviso do app: Convertendo para MP3, entrevista.wav, 64%, com barra de progresso." loading="lazy"></figure>
+        <h3>Sem janela no caminho</h3>
+        <p>O andamento aparece num aviso pequeno perto de onde você soltou e some quando termina. Vários arquivos de uma vez seguem em fila.</p>
+      </article>
+
+      <article class="mod" data-scene="convert">
+        <figure class="panel"><img src="assets/ui/configuracoes.png" width="440" height="600" alt="Configurações do app: tecla de cada roda, atalho do modo teclado e iniciar com o Windows." loading="lazy"></figure>
+        <h3>Do seu jeito</h3>
+        <p>Troque a tecla de cada roda. Prefere o teclado? Selecione no Explorer, aperte Ctrl+Shift+Espaço e escolha com as setas.</p>
+        <p>Inicia com o Windows e fica quieto na bandeja.</p>
+      </article>
+    </section>
+  </main>
+</div>
+
+<section id="formatos" class="formats">
+  <h2 class="giant" aria-label="Formatos">formatos</h2>
+  <p class="intro">Tudo roda no seu computador, sem internet. Toque numa família para ver o que entra e o que sai.</p>
+  <div class="bars" id="bars"></div>
+</section>
+
+<section id="perguntas" class="faq">
+  <h2>Perguntas</h2>
+  <div class="answers">
+    <p><b>Quanto custa?</b> O download está liberado nesta fase de lançamento.</p>
+    <p><b>Precisa de internet?</b> Não. Toda conversão acontece no seu computador; nenhum arquivo é enviado para lugar nenhum.</p>
+    <p><b>Meu arquivo original corre risco?</b> Não. O app só cria arquivos novos ao lado. Mesmo segurando Shift, o Windows recebe um pedido de cópia, nunca de mover.</p>
+    <p><b>Em que Windows funciona?</b> Windows 10 e 11 de 64 bits, com cerca de 1 GB livre depois de instalado.</p>
+    <p><b>Por que o instalador tem 277 MB?</b> Porque o LibreOffice e o FFmpeg vêm dentro. É o que garante o layout fiel nos documentos e as conversões sem internet.</p>
+    <p><b>O Windows disse que o app é desconhecido.</b> O instalador ainda não tem assinatura digital. Clique em “Mais informações” e depois em “Executar assim mesmo”.</p>
+    <p><b>Não gosto do Shift.</b> Em Configurações, na bandeja, cada roda pode usar Shift, Ctrl ou Alt.</p>
+    <p><b>Dá para juntar Word, PDF e fotos num PDF só?</b> Sim. Arraste tudo junto, aperte Ctrl e solte em “Juntar em PDF”. Cada arquivo vira páginas, na ordem em que foi selecionado.</p>
+    <p><b>Dá para usar sem arrastar?</b> Sim. Selecione os arquivos no Explorer e aperte Ctrl+Shift+Espaço. As setas escolhem, Enter aplica, Esc cancela.</p>
+    <p><b>A primeira conversão de documento demorou.</b> Na primeira vez o LibreOffice prepara o próprio perfil, cerca de 30 segundos. Depois é rápido.</p>
+    <p><b>Salva em HEIC?</b> Sim, se o Windows tiver as Extensões de Imagem HEIF e de Vídeo HEVC da Microsoft Store. Ler HEIC funciona sempre.</p>
+    <p><b>Tem para Mac?</b> Não. O DGA Conversor é feito para o Windows.</p>
+    <p><b>Como desinstalo?</b> Configurações do Windows, Aplicativos, DGA Conversor, Desinstalar.</p>
+  </div>
+</section>
+
+<section id="baixar" class="cta">
+  <p>Baixe, arraste o primeiro arquivo e aperte Shift no meio do caminho.</p>
+  <a class="btn" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
+  <a class="link" href="https://github.com/admmkt/dga-conversor/releases">Todas as versões</a>
+</section>
+
+<footer class="foot">
+  <div class="foot-pic"><img src="assets/ui/roda-imagem.png" width="500" height="540" alt="" loading="lazy"></div>
+  <div class="foot-menu">
+    <p class="small-mark">dga conversor</p>
+    <ul>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#ao-lado">Arquivo novo</a></li>
+      <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#formatos">Formatos</a></li>
+      <li><a href="#perguntas">Perguntas</a></li>
+      <li><a href="#baixar">Baixar</a></li>
+    </ul>
+    <div class="foot-info">
+      <p>Problemas e sugestões<br><a href="https://github.com/admmkt/dga-conversor/issues">github.com/admmkt/dga-conversor</a></p>
+      <p>Usa LibreOffice (MPL 2.0) e FFmpeg (GPL), que vêm no instalador.</p>
+    </div>
+    <p class="legal">© 2026 DGA Conversor</p>
+  </div>
+</footer>
+
+<script src="assets/rodas.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
