@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <path d="M18 3H64L84 23V97H18Z" fill="#0B0B0B" stroke="#7A4B00" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M64 3V23H84" fill="none" stroke="#7A4B00" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="51" cy="48" r="17" fill="none" stroke="#7A4B00" stroke-width="7" stroke-dasharray="13 4.8"/>
+  <rect x="44" y="45" width="14" height="11" rx="1.5" fill="#FFB000"/>
+  <path d="M47 45V41A4 4 0 0 1 55 41V45" fill="none" stroke="#FFB000" stroke-width="3"/>
+  <rect x="26" y="74" width="50" height="16" fill="#FFB000"/>
+  <text x="51" y="87" text-anchor="middle" font-family="Consolas, monospace" font-weight="700" font-size="15" fill="#0B0B0B">.DGA</text>
+</svg>

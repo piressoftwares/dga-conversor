@@ -8,8 +8,7 @@
 <meta property="og:title" content="DGA Conversor, por Pires Softwares">
 <meta property="og:description" content="Arraste, aperte Shift, solte no formato. Converte no seu Windows, sem enviar nada.">
 <meta property="og:image" content="assets/ui/roda-imagem.png">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/icone.png" type="image/png">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/PiresTrilha-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +24,8 @@
   <a href="#encriptar">Encriptar</a>
   <a href="#temas">Temas</a>
   <a href="#formatos">Formatos</a>
-  <a class="btn" href="#baixar">Baixar</a>
+  <a href="#preco">Preço</a>
+  <a class="btn" href="#preco">Comprar</a>
 </nav>
 
 <div class="split">
@@ -59,11 +59,26 @@
     <section class="hero" id="top" data-scene="demo">
       <p class="lede">Arraste um arquivo, aperte Shift e solte no formato. O convertido aparece ao lado do original.</p>
       <p class="get">
-        <a class="btn big" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
-        <span>Windows 10 e 11, 64 bits · 277 MB · <span class="ver">versão 1.2.0</span> · atualiza sozinho</span>
+        <a class="btn big buy" href="#preco" data-buy>Comprar por R$ 59</a>
+        <span>R$ <s>79</s> 59 de lançamento · Windows 10 e 11, 64 bits · <span class="ver">versão 1.3.0</span> · atualiza sozinho</span>
       </p>
       <a class="brand" href="#top"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g stroke="#7A4B00" stroke-width="4" stroke-linecap="round" fill="none"><path d="M30 4 V12 M30 88 V96 M4 30 H12 M88 30 H96"/><path d="M50 4 V12 M50 88 V96 M4 50 H12 M88 50 H96"/><path d="M70 4 V12 M70 88 V96 M4 70 H12 M88 70 H96"/></g><rect x="12" y="12" width="76" height="76" rx="8" fill="none" stroke="#7A4B00" stroke-width="4"/><g transform="translate(13 12) scale(.72)"><path d="M34 86 V18 H60 L72 30 V42 L60 54 H34" fill="none" stroke="#FFB000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><circle cx="34" cy="86" r="8" fill="#FFB000"/></g><rect class="cursor" x="62" y="64" width="8" height="10" fill="#FFB000"/></svg><span>DGA Conversor<small>por Pires Softwares</small></span></a>
       <h1 class="mark" aria-label="DGA Conversor">dga conversor</h1>
+    </section>
+
+    <section id="destaques" class="highlights">
+      <h2>O essencial</h2>
+      <ul class="hl">
+        <li><b>Converta arrastando.</b> Aperte <kbd>Shift</kbd> no meio do arraste e solte no formato.</li>
+        <li><b>Ferramentas e ações.</b> <kbd>Ctrl</kbd> abre as ferramentas; <kbd>Alt</kbd>, as ações.</li>
+        <li><b>Encriptar com senha.</b> .dga (AES-256-GCM), ZIP e PDF com senha.</li>
+        <li><b>Offline.</b> Nada sai do seu PC: tudo roda no seu computador.</li>
+        <li><b>5 temas.</b> A roda muda de forma, não só de cor.</li>
+      </ul>
+      <div class="dga-new">
+        <img src="assets/dga-file.svg" width="72" height="72" alt="Ícone do arquivo .dga" loading="lazy">
+        <p><span class="tag">v1.3</span><b>Arquivos .dga com ícone próprio.</b> Dois cliques abrem a roda com “Abrir” (decifra só para ver, sem deixar cópia na pasta) ou “Descriptografar” (salva ao lado).</p>
+      </div>
     </section>
 
     <section id="como-funciona" class="steps">
@@ -141,7 +156,7 @@
           <li><b>.dga</b>: arquivo cifrado com AES-256-GCM, o mesmo padrão usado por bancos. Só o DGA Conversor abre.</li>
           <li><b>ZIP com senha</b> (AES-256): abre no 7-Zip e no WinRAR.</li>
           <li><b>PDF com senha</b>: qualquer leitor de PDF pede a senha.</li>
-          <li>Para descriptografar, arraste o .dga para a roda.</li>
+          <li>Para abrir, dê dois cliques no .dga (v1.3): “Abrir” ou “Descriptografar”.</li>
         </ul>
         <p>O app mostra a força da senha e tem o botão “Gerar senha forte”. Também dá para marcar “Apagar o original com segurança” depois de encriptar.</p>
         <p class="note">Senha esquecida não tem recuperação. Guarde-a num gerenciador de senhas.</p>
@@ -187,12 +202,16 @@
   <div class="answers">
     <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
-    <p><b>Quanto custa?</b> O download está liberado nesta fase de lançamento.</p>
+    <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. Enquanto a venda não abre, o download é gratuito.</p>
+    <p><b>Como funciona a chave de ativação?</b> Depois do pagamento você recebe uma chave que vale para 2 PCs. Ative no app uma vez; depois ele funciona sem internet.</p>
+    <p><b>Posso devolver?</b> Sim. Garantia de 7 dias: se não gostar, devolvemos o dinheiro. Não há teste grátis, por isso a garantia.</p>
+    <p><b>Troquei de PC. E agora?</b> No app, desative a chave no PC antigo: a vaga é liberada e você ativa no novo.</p>
+    <p><b>As atualizações são pagas?</b> A compra inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</p>
     <p><b>Precisa de internet?</b> Não. Toda conversão acontece no seu computador; nenhum arquivo é enviado para lugar nenhum.</p>
     <p><b>Meu arquivo original corre risco?</b> Não. O app só cria arquivos novos ao lado. Mesmo segurando Shift, o Windows recebe um pedido de cópia, nunca de mover.</p>
     <p><b>Em que Windows funciona?</b> Windows 10 e 11 de 64 bits, com cerca de 1 GB livre depois de instalado.</p>
     <p><b>Por que o instalador tem 277 MB?</b> Porque o LibreOffice e o FFmpeg vêm dentro. É o que garante o layout fiel nos documentos e as conversões sem internet.</p>
-    <p><b>O Windows disse que o app é desconhecido.</b> O instalador ainda não tem assinatura digital. Clique em “Mais informações” e depois em “Executar assim mesmo”.</p>
+    <p><b>O Windows disse que o app é desconhecido.</b> Por ser um app novo, o Windows pode mostrar “O Windows protegeu o computador”. Clique em “Mais informações” e depois em “Executar assim mesmo”. É normal em apps recém-lançados.</p>
     <p><b>Não gosto do Shift.</b> Em Configurações, na bandeja, cada roda pode usar Shift, Ctrl ou Alt.</p>
     <p><b>Dá para juntar Word, PDF e fotos num PDF só?</b> Sim. Arraste tudo junto, aperte Ctrl e solte em “Juntar em PDF”. Cada arquivo vira páginas, na ordem em que foi selecionado.</p>
     <p><b>Dá para usar sem arrastar?</b> Sim. Selecione os arquivos no Explorer e aperte Ctrl+Shift+Espaço. As setas escolhem, Enter aplica, Esc cancela.</p>
@@ -203,10 +222,26 @@
   </div>
 </section>
 
+<section id="preco" class="price">
+  <img class="appicon" src="assets/icon.svg" width="72" height="72" alt="Ícone do DGA Conversor" loading="lazy">
+  <h2>Compra única</h2>
+  <p class="amount"><s>R$ 79</s> <b>R$ 59</b> <small>de lançamento</small></p>
+  <ul>
+    <li>Pix ou cartão.</li>
+    <li>Chave de ativação para 2 PCs.</li>
+    <li>Garantia de 7 dias: devolvemos o dinheiro. Não há teste grátis.</li>
+    <li>Inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</li>
+  </ul>
+  <p><a class="btn big buy" href="#baixar" data-buy>Comprar por R$ 59</a></p>
+  <p class="soon" id="soon" hidden>Venda abre em breve — baixe grátis durante o lançamento.</p>
+</section>
+
 <section id="baixar" class="cta">
   <p>Baixe, arraste o primeiro arquivo e aperte Shift no meio do caminho.</p>
-  <a class="btn" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
+  <a class="btn buy" href="#preco" data-buy>Comprar por R$ 59</a>
+  <a class="btn alt" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
   <a class="link" href="https://github.com/admmkt/dga-conversor/releases">Todas as versões</a>
+  <p class="smart"><b>O Windows mostrou um aviso?</b> Por ser um app novo, ele pode exibir “O Windows protegeu o computador”. É normal em apps recém-lançados. Clique em “Mais informações” e depois em “Executar assim mesmo”. O instalador vem só do GitHub oficial deste projeto.</p>
 </section>
 
 <footer class="foot">
@@ -219,6 +254,7 @@
       <li><a href="#recursos">Recursos</a></li>
       <li><a href="#temas">Temas</a></li>
       <li><a href="#formatos">Formatos</a></li>
+      <li><a href="#preco">Preço</a></li>
       <li><a href="#perguntas">Perguntas</a></li>
       <li><a href="#baixar">Baixar</a></li>
     </ul>
