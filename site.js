@@ -53,20 +53,20 @@ function render() {
     const fill = on || (i === S.ring && S.opt >= 0) ? 'url(#go)' : 'url(#gl)';
     const d = n === 1 ? annulus(R_HOLE, R_OUT) : wedge(i * span - span / 2, i * span + span / 2, R_HOLE, R_OUT);
     const mid = rad(i * span), [lx, ly] = n === 1 ? [0, -104] : pt(104, mid);
-    segs += `<g class="seg" data-i="${i}"><path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="${SW}" stroke-linejoin="round" fill-rule="evenodd"/>${label(it.l, lx, ly, 15, on || (i === S.ring && S.opt >= 0) ? '#fff' : '#1d1d1f')}</g>`;
+    segs += `<g class="seg" data-i="${i}"><path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="${SW}" stroke-linejoin="round" fill-rule="evenodd"/>${label(it.l, lx, ly, 15, on || (i === S.ring && S.opt >= 0) ? '#1a1100' : '#1d1d1f')}</g>`;
   });
   let ring = '';
   if (S.ring >= 0 && items[S.ring]?.o.length > 1) {
     const opts = items[S.ring].o, m = opts.length, os = Math.min(32, 360 / m), start = S.ring * span - (m * os) / 2;
     opts.forEach((o, j) => {
       const on = j === S.opt, a0 = start + j * os, [lx, ly] = pt(191, rad(a0 + os / 2));
-      ring += `<g class="seg" style="animation-delay:${j * 30}ms"><path d="${wedge(a0, a0 + os, RING_IN, RING_OUT)}" fill="${on ? 'url(#go)' : 'url(#gl)'}" stroke="${on ? 'url(#go)' : 'url(#gl)'}" stroke-width="${SW}" stroke-linejoin="round"/>${label(o, lx, ly, 13, on ? '#fff' : '#1d1d1f')}</g>`;
+      ring += `<g class="seg" style="animation-delay:${j * 30}ms"><path d="${wedge(a0, a0 + os, RING_IN, RING_OUT)}" fill="${on ? 'url(#go)' : 'url(#gl)'}" stroke="${on ? 'url(#go)' : 'url(#gl)'}" stroke-width="${SW}" stroke-linejoin="round"/>${label(o, lx, ly, 13, on ? '#1a1100' : '#1d1d1f')}</g>`;
     });
   }
   const it = items[S.focus], centre = it ? (S.opt >= 0 ? `${it.l} · ${it.o[S.opt]}` : it.l) : S.mode === 'actions' ? 'Ações' : R.labels[S.kind] || 'Arquivo';
   svg.innerHTML = `<defs>
       <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ebebee"/></linearGradient>
-      <linearGradient id="go" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f6bff"/><stop offset="1" stop-color="#4b3fe0"/></linearGradient>
+      <linearGradient id="go" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC53D"/><stop offset="1" stop-color="#FFB000"/></linearGradient>
     </defs>
     <g class="disc"><circle r="${R_DISC}" fill="#e4e3ea"/><circle r="156.5" fill="none" stroke="#f7f7f9" stroke-width="3"/>
     ${segs}<circle r="${R_HOLE - 4}" fill="#fff"/>${pill(centre.length > 22 ? centre.slice(0, 21) + '…' : centre)}<g class="ring">${ring}</g></g>`;
@@ -380,3 +380,12 @@ document.querySelectorAll('.steps, .beside, .features, .formats, .faq, .cta, .fo
 
 desk.querySelectorAll('.file').forEach(f => { f.dataset.ext = extOf(f.dataset.name).toUpperCase(); });
 setWheel('convert', 'image');
+
+// ---------- temas ----------
+document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#temaTabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  const img = document.getElementById('temaImg');
+  img.src = `assets/ui/temas/${b.dataset.t}.webp`;
+  img.alt = `Roda do tema ${b.textContent}`;
+  document.getElementById('temaTxt').textContent = b.dataset.d;
+}));

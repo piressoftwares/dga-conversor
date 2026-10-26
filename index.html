@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DGA Conversor — converta arrastando, no Windows</title>
+<title>DGA Conversor — converta arrastando, no Windows | Pires Softwares</title>
 <meta name="description" content="Arraste um arquivo, aperte Shift e solte no formato. O DGA Conversor converte imagens, vídeos, áudios, PDFs, documentos e planilhas no seu Windows, sem internet, e salva ao lado do original.">
-<meta property="og:title" content="DGA Conversor">
+<meta property="og:title" content="DGA Conversor, por Pires Softwares">
 <meta property="og:description" content="Arraste, aperte Shift, solte no formato. Converte no seu Windows, sem enviar nada.">
 <meta property="og:image" content="assets/ui/roda-imagem.png">
-<link rel="icon" href="assets/icone.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icone.png" type="image/png">
+<link rel="preload" href="assets/fonts/PiresTrilha-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&display=swap" rel="stylesheet">
@@ -20,6 +22,8 @@
   <a href="#como-funciona">Como funciona</a>
   <a href="#ao-lado">Arquivo novo</a>
   <a href="#recursos">Recursos</a>
+  <a href="#encriptar">Encriptar</a>
+  <a href="#temas">Temas</a>
   <a href="#formatos">Formatos</a>
   <a class="btn" href="#baixar">Baixar</a>
 </nav>
@@ -52,12 +56,13 @@
   </aside>
 
   <main class="col">
-    <section class="hero" data-scene="demo">
+    <section class="hero" id="top" data-scene="demo">
       <p class="lede">Arraste um arquivo, aperte Shift e solte no formato. O convertido aparece ao lado do original.</p>
       <p class="get">
         <a class="btn big" href="https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
-        <span>Windows 10 e 11, 64 bits · 277 MB · versão 1.0.0</span>
+        <span>Windows 10 e 11, 64 bits · 277 MB · <span class="ver">versão 1.2.0</span> · atualiza sozinho</span>
       </p>
+      <a class="brand" href="#top"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g stroke="#7A4B00" stroke-width="4" stroke-linecap="round" fill="none"><path d="M30 4 V12 M30 88 V96 M4 30 H12 M88 30 H96"/><path d="M50 4 V12 M50 88 V96 M4 50 H12 M88 50 H96"/><path d="M70 4 V12 M70 88 V96 M4 70 H12 M88 70 H96"/></g><rect x="12" y="12" width="76" height="76" rx="8" fill="none" stroke="#7A4B00" stroke-width="4"/><g transform="translate(13 12) scale(.72)"><path d="M34 86 V18 H60 L72 30 V42 L60 54 H34" fill="none" stroke="#FFB000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><circle cx="34" cy="86" r="8" fill="#FFB000"/></g><rect class="cursor" x="62" y="64" width="8" height="10" fill="#FFB000"/></svg><span>DGA Conversor<small>por Pires Softwares</small></span></a>
       <h1 class="mark" aria-label="DGA Conversor">dga conversor</h1>
     </section>
 
@@ -129,12 +134,44 @@
         <p>O andamento aparece num aviso pequeno perto de onde você soltou e some quando termina. Vários arquivos de uma vez seguem em fila.</p>
       </article>
 
+      <article class="mod" id="encriptar" data-scene="actions">
+        <h3><span class="tag">v1.1</span>Encriptar com senha</h3>
+        <p>Proteja um arquivo ou pasta direto da roda, sem programa extra:</p>
+        <ul>
+          <li><b>.dga</b>: arquivo cifrado com AES-256-GCM, o mesmo padrão usado por bancos. Só o DGA Conversor abre.</li>
+          <li><b>ZIP com senha</b> (AES-256): abre no 7-Zip e no WinRAR.</li>
+          <li><b>PDF com senha</b>: qualquer leitor de PDF pede a senha.</li>
+          <li>Para descriptografar, arraste o .dga para a roda.</li>
+        </ul>
+        <p>O app mostra a força da senha e tem o botão “Gerar senha forte”. Também dá para marcar “Apagar o original com segurança” depois de encriptar.</p>
+        <p class="note">Senha esquecida não tem recuperação. Guarde-a num gerenciador de senhas.</p>
+      </article>
+
+      <article class="mod" data-scene="convert">
+        <h3><span class="tag">v1.1</span>Atualização automática</h3>
+        <p>A partir da versão 1.1 o app se atualiza sozinho: quando sai uma versão nova, ele baixa e instala. Você não precisa voltar aqui.</p>
+      </article>
+
       <article class="mod" data-scene="convert">
         <figure class="panel"><img src="assets/ui/configuracoes.png" width="440" height="600" alt="Configurações do app: tecla de cada roda, atalho do modo teclado e iniciar com o Windows." loading="lazy"></figure>
         <h3>Do seu jeito</h3>
         <p>Troque a tecla de cada roda. Prefere o teclado? Selecione no Explorer, aperte Ctrl+Shift+Espaço e escolha com as setas.</p>
         <p>Inicia com o Windows e fica quieto na bandeja.</p>
       </article>
+    </section>
+
+    <section id="temas" class="temas" data-scene="convert">
+      <h2><span class="tag">v1.2</span>5 temas, 5 formas de roda</h2>
+      <p>Os temas mudam a forma da roda, dos cartões e dos avisos, não só a cor. Escolha em Configurações.</p>
+      <div class="tabs" id="temaTabs" role="tablist" aria-label="Temas">
+        <button type="button" role="tab" aria-selected="true" data-t="classico" data-d="Clássico: gomos claros e arredondados, o visual de fábrica.">Clássico</button>
+        <button type="button" role="tab" aria-selected="false" data-t="cofre" data-d="Cofre: mostrador escuro com marcações de relógio e detalhes dourados.">Cofre</button>
+        <button type="button" role="tab" aria-selected="false" data-t="prisma" data-d="Prisma: vidro escuro com brilho em degradê.">Prisma</button>
+        <button type="button" role="tab" aria-selected="false" data-t="etiqueta" data-d="Etiqueta: preto e amarelo, bordas grossas e listras de aviso.">Etiqueta</button>
+        <button type="button" role="tab" aria-selected="false" data-t="circuito" data-d="Circuito: trilhas e terminais em âmbar, com texto de terminal.">Circuito</button>
+      </div>
+      <img id="temaImg" src="assets/ui/temas/classico.webp" width="1263" height="950" alt="Roda do tema Clássico" loading="lazy">
+      <p id="temaTxt">Clássico: gomos claros e arredondados, o visual de fábrica.</p>
     </section>
   </main>
 </div>
@@ -148,6 +185,8 @@
 <section id="perguntas" class="faq">
   <h2>Perguntas</h2>
   <div class="answers">
+    <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
+    <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
     <p><b>Quanto custa?</b> O download está liberado nesta fase de lançamento.</p>
     <p><b>Precisa de internet?</b> Não. Toda conversão acontece no seu computador; nenhum arquivo é enviado para lugar nenhum.</p>
     <p><b>Meu arquivo original corre risco?</b> Não. O app só cria arquivos novos ao lado. Mesmo segurando Shift, o Windows recebe um pedido de cópia, nunca de mover.</p>
@@ -173,11 +212,12 @@
 <footer class="foot">
   <div class="foot-pic"><img src="assets/ui/roda-imagem.png" width="500" height="540" alt="" loading="lazy"></div>
   <div class="foot-menu">
-    <p class="small-mark">dga conversor</p>
+    <p class="small-mark">dga conversor<br><small>por Pires Softwares</small></p>
     <ul>
       <li><a href="#como-funciona">Como funciona</a></li>
       <li><a href="#ao-lado">Arquivo novo</a></li>
       <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#temas">Temas</a></li>
       <li><a href="#formatos">Formatos</a></li>
       <li><a href="#perguntas">Perguntas</a></li>
       <li><a href="#baixar">Baixar</a></li>
@@ -186,7 +226,7 @@
       <p>Problemas e sugestões<br><a href="https://github.com/admmkt/dga-conversor/issues">github.com/admmkt/dga-conversor</a></p>
       <p>Usa LibreOffice (MPL 2.0) e FFmpeg (GPL), que vêm no instalador.</p>
     </div>
-    <p class="legal">© 2026 DGA Conversor</p>
+    <p class="legal">© 2026 Pires Softwares · DGA Conversor</p>
   </div>
 </footer>
 
