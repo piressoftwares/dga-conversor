@@ -1,6 +1,6 @@
 // URL da venda (Mercado Pago). Vazia = venda ainda fechada: o botão leva ao download gratuito.
 const CHECKOUT_URL = '';
-const DOWNLOAD_URL = 'https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe';
+const DOWNLOAD_URL = 'https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe';
 
 // Demonstração da roda do DGA Conversor: mesma geometria e mesmos itens do app (assets/rodas.js vem do formats.js).
 document.documentElement.classList.add('js');
