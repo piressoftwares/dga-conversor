@@ -1,3 +1,7 @@
+// URL da venda (Mercado Pago). Vazia = venda ainda fechada: o botão leva ao download gratuito.
+const CHECKOUT_URL = '';
+const DOWNLOAD_URL = 'https://github.com/admmkt/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe';
+
 // Demonstração da roda do DGA Conversor: mesma geometria e mesmos itens do app (assets/rodas.js vem do formats.js).
 document.documentElement.classList.add('js');
 const R = window.RODAS;
@@ -389,3 +393,10 @@ document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('c
   img.alt = `Roda do tema ${b.textContent}`;
   document.getElementById('temaTxt').textContent = b.dataset.d;
 }));
+
+// ---------- botões de compra ----------
+document.querySelectorAll('[data-buy]').forEach(b => {
+  if (CHECKOUT_URL) { b.href = CHECKOUT_URL; b.textContent = 'Comprar por R$ 59'; }
+  else { b.href = DOWNLOAD_URL; b.textContent = 'Baixar grátis no lançamento'; } // o aviso "venda abre em breve" fica no #soon
+});
+$('soon').hidden = !!CHECKOUT_URL;
