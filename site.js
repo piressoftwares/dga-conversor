@@ -474,3 +474,20 @@ $('recForm').addEventListener('submit', async e => {
   } catch { m.textContent = 'Não foi possível consultar agora. Tente de novo.'; }
   btn.disabled = false;
 });
+
+$('refForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('refMsg'), btn = e.submitter;
+  const pagamento = $('refPag').value.trim(), email = $('refMail').value.trim();
+  if (!/^\d{1,20}$/.test(pagamento) || !email) { m.textContent = 'Confira o número da operação (só números) e o e-mail.'; return; }
+  if (!$('refOk').checked) { m.textContent = 'Marque a confirmação para continuar.'; return; }
+  btn.disabled = true;
+  m.textContent = 'Pedindo o reembolso…';
+  try {
+    const r = await post('/reembolso', { pagamento, email });
+    if (r.ok) { m.textContent = 'Reembolso feito. O valor volta pelo mesmo meio de pagamento (Pix na hora; cartão conforme a fatura). A chave foi cancelada.'; return; }
+    m.textContent = r.error === 'prazo' ? 'A garantia de 7 dias desta compra já acabou.'
+      : r.status === 400 ? 'Confira o número da operação (só números) e o e-mail.' : 'Não encontramos uma compra com esses dados.';
+  } catch { m.textContent = 'Não foi possível pedir agora. Tente de novo.'; }
+  btn.disabled = false;
+});

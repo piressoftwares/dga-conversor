@@ -340,3 +340,4 @@ kbd { font: 600 0.92em/1 "Archivo", sans-serif; }
 .btn[aria-disabled="true"] { opacity: .6; pointer-events: none; }
 
 .keybox[hidden] { display: none; } /* display do .keybox venceria o atributo hidden */
+.lic label.check { display: flex; align-items: flex-start; gap: 8px; }
