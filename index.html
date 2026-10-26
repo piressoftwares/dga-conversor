@@ -204,7 +204,7 @@
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
     <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. Enquanto a venda não abre, o download é gratuito.</p>
     <p><b>Como funciona a chave de ativação?</b> Não enviamos e-mail: assim que o pagamento é aprovado, a chave aparece nesta página, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
-    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago) e o e-mail usado no pagamento. No app, o botão “Perdi minha chave” também abre esta página.</p>
+    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago). No app, o botão “Perdi minha chave” também abre esta página.</p>
     <p><b>Posso devolver?</b> Sim. Garantia de 7 dias: se não gostar, <a href="#reembolso">peça o reembolso aqui</a> e o dinheiro volta na hora pelo Mercado Pago, sem precisar explicar. Não há teste grátis, por isso a garantia.</p>
     <p><b>Troquei de PC. E agora?</b> No app antigo, em Configurações, Licença, clique em “Desativar este PC”: a vaga é liberada e você ativa a mesma chave no novo.</p>
     <p><b>As atualizações são pagas?</b> A compra inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</p>
@@ -225,10 +225,9 @@
 
 <section id="recuperar" class="lic">
   <h2>Perdi minha chave</h2>
-  <p>Informe os dados do pagamento no Mercado Pago. Não guardamos e-mail nem cartão.</p>
+  <p>Informe o número da operação que está no comprovante do Mercado Pago (e-mail, app do MP ou extrato do Pix). Não guardamos e-mail nem cartão.</p>
   <form id="recForm" novalidate>
     <label>Número da operação (no comprovante do Mercado Pago)<input id="recPag" inputmode="numeric" autocomplete="off" required></label>
-    <label>E-mail usado no pagamento<input id="recMail" type="email" autocomplete="email" required></label>
     <button class="btn" type="submit">Recuperar</button>
   </form>
   <p id="recMsg" role="status"></p>
@@ -244,7 +243,6 @@
   <p>Até 7 dias depois da compra, o dinheiro volta automaticamente pelo Mercado Pago, sem perguntas. A chave deixa de funcionar na hora.</p>
   <form id="refForm" novalidate>
     <label>Número da operação (no comprovante do Mercado Pago)<input id="refPag" inputmode="numeric" autocomplete="off" required></label>
-    <label>E-mail usado no pagamento<input id="refMail" type="email" autocomplete="email" required></label>
     <label class="check"><input id="refOk" type="checkbox" required> Entendo que a chave será cancelada e o app deixará de funcionar.</label>
     <button class="btn" type="submit">Pedir reembolso</button>
   </form>
