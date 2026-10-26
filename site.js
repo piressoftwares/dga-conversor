@@ -398,7 +398,10 @@ document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('c
 // ---------- venda e licença ----------
 const post = (rota, corpo) => fetch(LIC_API + rota, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
   .then(async r => ({ status: r.status, ...(await r.json().catch(() => ({}))) }));
-const store = { set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sem armazenamento: segue sem guardar */ } } };
+const store = {
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sem armazenamento: segue sem guardar */ } },
+  get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+};
 
 document.querySelectorAll('[data-buy]').forEach(b => {
   if (!VENDA_ABERTA) { b.href = DOWNLOAD_URL; b.textContent = 'Baixar grátis no lançamento'; return; } // o aviso "venda abre em breve" fica no #soon
@@ -457,6 +460,14 @@ if (/^[0-9a-f]{32}$/.test(ref || '')) {
   };
   tentar();
   if (location.hash === '#obrigado') $('obrigado').scrollIntoView();
+} else if (/^[0-9a-f]{32}$/.test(store.get('dga-ref') || '')) {
+  // Pix não volta sozinho do Mercado Pago: ao reabrir o site, mostra a chave se o pedido guardado já foi pago
+  post('/pedido', { ref: store.get('dga-ref') }).then(r => {
+    if (!r.chave) return;
+    $('obrigado').hidden = false;
+    $('obMsg').textContent = 'Pagamento confirmado. Sua chave:';
+    showKey($('obKey'), r.chave);
+  }).catch(() => {});
 }
 
 $('recForm').addEventListener('submit', async e => {
