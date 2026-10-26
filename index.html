@@ -203,9 +203,10 @@
     <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
     <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. Enquanto a venda não abre, o download é gratuito.</p>
-    <p><b>Como funciona a chave de ativação?</b> Depois do pagamento você recebe uma chave que vale para 2 PCs. Ative no app uma vez; depois ele funciona sem internet.</p>
+    <p><b>Como funciona a chave de ativação?</b> Não enviamos e-mail: assim que o pagamento é aprovado, a chave aparece nesta página, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
+    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago) e o e-mail usado no pagamento. No app, o botão “Perdi minha chave” também abre esta página.</p>
     <p><b>Posso devolver?</b> Sim. Garantia de 7 dias: se não gostar, devolvemos o dinheiro. Não há teste grátis, por isso a garantia.</p>
-    <p><b>Troquei de PC. E agora?</b> No app, desative a chave no PC antigo: a vaga é liberada e você ativa no novo.</p>
+    <p><b>Troquei de PC. E agora?</b> No app antigo, em Configurações, Licença, clique em “Desativar este PC”: a vaga é liberada e você ativa a mesma chave no novo.</p>
     <p><b>As atualizações são pagas?</b> A compra inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</p>
     <p><b>Precisa de internet?</b> Não. Toda conversão acontece no seu computador; nenhum arquivo é enviado para lugar nenhum.</p>
     <p><b>Meu arquivo original corre risco?</b> Não. O app só cria arquivos novos ao lado. Mesmo segurando Shift, o Windows recebe um pedido de cópia, nunca de mover.</p>
@@ -222,6 +223,22 @@
   </div>
 </section>
 
+<section id="recuperar" class="lic">
+  <h2>Perdi minha chave</h2>
+  <p>Informe os dados do pagamento no Mercado Pago. Não guardamos e-mail nem cartão.</p>
+  <form id="recForm" novalidate>
+    <label>Número da operação (no comprovante do Mercado Pago)<input id="recPag" inputmode="numeric" autocomplete="off" required></label>
+    <label>E-mail usado no pagamento<input id="recMail" type="email" autocomplete="email" required></label>
+    <button class="btn" type="submit">Recuperar</button>
+  </form>
+  <p id="recMsg" role="status"></p>
+  <div class="keybox" id="recKey" hidden>
+    <code class="key"></code>
+    <button class="btn" type="button" data-copy>Copiar chave</button>
+    <p><b>Guarde esta chave.</b> No app: Configurações, Licença, cole a chave e clique em Ativar. Vale para 2 PCs.</p>
+  </div>
+</section>
+
 <section id="preco" class="price">
   <img class="appicon" src="assets/icon.svg" width="72" height="72" alt="Ícone do DGA Conversor" loading="lazy">
   <h2>Compra única</h2>
@@ -234,6 +251,20 @@
   </ul>
   <p><a class="btn big buy" href="#baixar" data-buy>Comprar por R$ 59</a></p>
   <p class="soon" id="soon" hidden>Venda abre em breve — baixe grátis durante o lançamento.</p>
+</section>
+
+<section id="obrigado" class="lic dark" hidden aria-live="polite">
+  <h2 id="obTitulo">Pagamento recebido!</h2>
+  <p id="obMsg">Confirmando o pagamento…</p>
+  <div class="keybox" id="obKey" hidden>
+    <code class="key"></code>
+    <button class="btn" type="button" data-copy>Copiar chave</button>
+    <p><b>Guarde esta chave.</b> Vale para 2 PCs.</p>
+    <ol>
+      <li><a href="https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixe e instale</a> o DGA Conversor.</li>
+      <li>Abra o app (ícone na bandeja), vá em Configurações, cole a chave e clique em Ativar.</li>
+    </ol>
+  </div>
 </section>
 
 <section id="baixar" class="cta">
@@ -255,6 +286,7 @@
       <li><a href="#temas">Temas</a></li>
       <li><a href="#formatos">Formatos</a></li>
       <li><a href="#preco">Preço</a></li>
+      <li><a href="#recuperar">Perdi minha chave</a></li>
       <li><a href="#perguntas">Perguntas</a></li>
       <li><a href="#baixar">Baixar</a></li>
     </ul>
