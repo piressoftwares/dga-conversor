@@ -423,6 +423,25 @@ document.querySelectorAll('[data-buy]').forEach(b => {
     }
   });
 });
+document.querySelectorAll('[data-teste]').forEach(b => {
+  if (!VENDA_ABERTA) { b.hidden = true; return; }
+  b.addEventListener('click', async e => {
+    e.preventDefault();
+    if (b.getAttribute('aria-disabled')) return;
+    b.setAttribute('aria-disabled', 'true');
+    const txt = b.textContent;
+    b.textContent = 'Abrindo o Mercado Pago…';
+    try {
+      const r = await post('/teste', {});
+      if (!r.url) throw new Error('sem url');
+      location.href = r.url;
+    } catch {
+      b.removeAttribute('aria-disabled');
+      b.textContent = txt;
+      alert('Não foi possível abrir a Promoção para teste. Tente de novo.');
+    }
+  });
+});
 $('soon').hidden = VENDA_ABERTA;
 
 function showKey(box, chave) {
@@ -436,9 +455,29 @@ document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click'
   setTimeout(() => { b.textContent = 'Copiar chave'; }, 2500);
 }));
 
-// volta do Mercado Pago: ?ref=<32 hex>#obrigado; Pix pode demorar, então consulta a cada 4 s por ~3 min
-const ref = new URLSearchParams(location.search).get('ref');
-if (/^[0-9a-f]{32}$/.test(ref || '')) {
+// volta da Promoção para teste: ?teste=1&preapproval_id=<32 hex>; o cartão pode levar alguns segundos para ser aceito
+const qs = new URLSearchParams(location.search), sub = qs.get('preapproval_id');
+const ref = qs.get('ref');
+if (qs.has('teste')) {
+  $('obrigado').hidden = false;
+  $('obTitulo').textContent = 'Promoção para teste ativada!';
+  const msg = $('obMsg'), t0 = Date.now();
+  const semId = 'Para pegar sua chave, use “Perdi minha chave” com o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). <a href="#recuperar">Perdi minha chave</a>';
+  const tentar = async () => {
+    try {
+      const r = await post('/assinatura', { assinatura: sub });
+      if (r.chave) {
+        msg.textContent = 'Use 7 dias grátis. Se não cancelar a assinatura no Mercado Pago, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre. Sua chave:';
+        return showKey($('obKey'), r.chave);
+      }
+    } catch {}
+    if (Date.now() - t0 > 120000) { msg.innerHTML = semId; return; }
+    msg.textContent = 'Confirmando a assinatura no Mercado Pago…';
+    setTimeout(tentar, 4000);
+  };
+  if (/^[0-9a-f]{32}$/.test(sub || '')) tentar(); else msg.innerHTML = semId;
+  $('obrigado').scrollIntoView();
+} else if (/^[0-9a-f]{32}$/.test(ref || '')) {
   store.set('dga-ref', ref);
   $('obrigado').hidden = false;
   const msg = $('obMsg'), t0 = Date.now();
@@ -474,31 +513,15 @@ $('recForm').addEventListener('submit', async e => {
   e.preventDefault();
   const m = $('recMsg'), btn = e.submitter;
   $('recKey').hidden = true;
-  const pagamento = $('recPag').value.trim();
-  if (!/^\d{1,20}$/.test(pagamento) ) { m.textContent = 'Confira o número da operação (só números).'; return; }
+  const pagamento = $('recPag').value.trim().toLowerCase();
+  const assinatura = /^[0-9a-f]{32}$/.test(pagamento);
+  if (!assinatura && !/^\d{1,20}$/.test(pagamento)) { m.textContent = 'Confira o número: a operação tem só números; a assinatura tem 32 letras e números.'; return; }
   btn.disabled = true;
   m.textContent = 'Procurando…';
   try {
-    const r = await post('/recuperar', { pagamento });
+    const r = assinatura ? await post('/assinatura', { assinatura: pagamento }) : await post('/recuperar', { pagamento });
     if (r.chave) { m.textContent = 'Encontramos sua compra. Sua chave:'; showKey($('recKey'), r.chave); }
     else m.textContent = r.status === 400 ? 'Confira o número da operação (só números).' : 'Não encontramos uma compra com esse número.';
   } catch { m.textContent = 'Não foi possível consultar agora. Tente de novo.'; }
-  btn.disabled = false;
-});
-
-$('refForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const m = $('refMsg'), btn = e.submitter;
-  const pagamento = $('refPag').value.trim();
-  if (!/^\d{1,20}$/.test(pagamento) ) { m.textContent = 'Confira o número da operação (só números).'; return; }
-  if (!$('refOk').checked) { m.textContent = 'Marque a confirmação para continuar.'; return; }
-  btn.disabled = true;
-  m.textContent = 'Pedindo o reembolso…';
-  try {
-    const r = await post('/reembolso', { pagamento });
-    if (r.ok) { m.textContent = 'Reembolso feito. O valor volta pelo mesmo meio de pagamento (Pix na hora; cartão conforme a fatura). A chave foi cancelada.'; return; }
-    m.textContent = r.error === 'prazo' ? 'A garantia de 7 dias desta compra já acabou.'
-      : r.status === 400 ? 'Confira o número da operação (só números).' : 'Não encontramos uma compra com esse número.';
-  } catch { m.textContent = 'Não foi possível pedir agora. Tente de novo.'; }
   btn.disabled = false;
 });

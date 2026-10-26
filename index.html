@@ -203,9 +203,10 @@
     <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
     <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. Enquanto a venda não abre, o download é gratuito.</p>
+    <p><b>Como funciona a Promoção para teste?</b> Você cadastra o cartão no Mercado Pago e usa o app completo por 7 dias, sem pagar nada. Se gostar, não faça nada: no 8º dia cobramos R$ 59 uma única vez e a licença é sua para sempre. Se não quiser, cancele a assinatura no Mercado Pago (Seu perfil, Assinaturas) antes do fim do teste e nada é cobrado. Um teste por PC.</p>
     <p><b>Como funciona a chave de ativação?</b> Não enviamos e-mail: assim que o pagamento é aprovado, a chave aparece nesta página, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
-    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago). No app, o botão “Perdi minha chave” também abre esta página.</p>
-    <p><b>Posso devolver?</b> Sim. Garantia de 7 dias: se não gostar, <a href="#reembolso">peça o reembolso aqui</a> e o dinheiro volta na hora pelo Mercado Pago, sem precisar explicar. Não há teste grátis, por isso a garantia.</p>
+    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago) ou, no teste grátis, com o número da assinatura. No app, o botão “Perdi minha chave” também abre esta página.</p>
+    <p><b>Posso devolver?</b> Os 7 dias da Promoção para teste são a sua avaliação: cancele antes do fim e nada é cobrado. Depois da cobrança, não há reembolso pelo site.</p>
     <p><b>Troquei de PC. E agora?</b> No app antigo, em Configurações, Licença, clique em “Desativar este PC”: a vaga é liberada e você ativa a mesma chave no novo.</p>
     <p><b>As atualizações são pagas?</b> A compra inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</p>
     <p><b>Precisa de internet?</b> Não. Toda conversão acontece no seu computador; nenhum arquivo é enviado para lugar nenhum.</p>
@@ -225,9 +226,9 @@
 
 <section id="recuperar" class="lic">
   <h2>Perdi minha chave</h2>
-  <p>Informe o número da operação que está no comprovante do Mercado Pago (e-mail, app do MP ou extrato do Pix). Não guardamos e-mail nem cartão.</p>
+  <p>Informe o número da operação que está no comprovante do Mercado Pago (e-mail, app do MP ou extrato do Pix). Na Promoção para teste, use o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). Não guardamos e-mail nem cartão.</p>
   <form id="recForm" novalidate>
-    <label>Número da operação (no comprovante do Mercado Pago)<input id="recPag" inputmode="numeric" autocomplete="off" required></label>
+    <label>Número da operação ou da assinatura (no Mercado Pago)<input id="recPag" autocomplete="off" required></label>
     <button class="btn" type="submit">Recuperar</button>
   </form>
   <p id="recMsg" role="status"></p>
@@ -238,17 +239,6 @@
   </div>
 </section>
 
-<section id="reembolso" class="lic">
-  <h2>Reembolso (garantia de 7 dias)</h2>
-  <p>Até 7 dias depois da compra, o dinheiro volta automaticamente pelo Mercado Pago, sem perguntas. A chave deixa de funcionar na hora.</p>
-  <form id="refForm" novalidate>
-    <label>Número da operação (no comprovante do Mercado Pago)<input id="refPag" inputmode="numeric" autocomplete="off" required></label>
-    <label class="check"><input id="refOk" type="checkbox" required> Entendo que a chave será cancelada e o app deixará de funcionar.</label>
-    <button class="btn" type="submit">Pedir reembolso</button>
-  </form>
-  <p id="refMsg" role="status"></p>
-</section>
-
 <section id="preco" class="price">
   <img class="appicon" src="assets/icon.svg" width="72" height="72" alt="Ícone do DGA Conversor" loading="lazy">
   <h2>Compra única</h2>
@@ -256,10 +246,11 @@
   <ul>
     <li>Pix ou cartão.</li>
     <li>Chave de ativação para 2 PCs.</li>
-    <li>Garantia de 7 dias: devolvemos o dinheiro. Não há teste grátis.</li>
+    <li>Promoção para teste: 7 dias grátis com cartão. Cancele antes do fim e nada é cobrado. Sem reembolso depois da compra.</li>
     <li>Inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</li>
   </ul>
-  <p><a class="btn big buy" href="#baixar" data-buy>Comprar por R$ 59</a></p>
+  <p><a class="btn big buy" href="#baixar" data-teste>Promoção para teste: 7 dias grátis</a></p>
+  <p><a class="btn alt" href="#baixar" data-buy>Comprar por R$ 59</a></p>
   <p class="soon" id="soon" hidden>Venda abre em breve — baixe grátis durante o lançamento.</p>
 </section>
 
@@ -297,7 +288,6 @@
       <li><a href="#formatos">Formatos</a></li>
       <li><a href="#preco">Preço</a></li>
       <li><a href="#recuperar">Perdi minha chave</a></li>
-      <li><a href="#reembolso">Reembolso</a></li>
       <li><a href="#perguntas">Perguntas</a></li>
       <li><a href="#baixar">Baixar</a></li>
     </ul>
