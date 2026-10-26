@@ -1,5 +1,6 @@
-// URL da venda (Mercado Pago). Vazia = venda ainda fechada: o botão leva ao download gratuito.
-const CHECKOUT_URL = '';
+// Venda (Cloudflare Worker + Mercado Pago). VENDA_ABERTA false = botão leva ao download gratuito.
+const LIC_API = 'https://dga-licencas.pires-softwares.workers.dev';
+const VENDA_ABERTA = false;
 const DOWNLOAD_URL = 'https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe';
 
 // Demonstração da roda do DGA Conversor: mesma geometria e mesmos itens do app (assets/rodas.js vem do formats.js).
@@ -394,9 +395,82 @@ document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('c
   document.getElementById('temaTxt').textContent = b.dataset.d;
 }));
 
-// ---------- botões de compra ----------
+// ---------- venda e licença ----------
+const post = (rota, corpo) => fetch(LIC_API + rota, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
+  .then(async r => ({ status: r.status, ...(await r.json().catch(() => ({}))) }));
+const store = { set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sem armazenamento: segue sem guardar */ } } };
+
 document.querySelectorAll('[data-buy]').forEach(b => {
-  if (CHECKOUT_URL) { b.href = CHECKOUT_URL; b.textContent = 'Comprar por R$ 59'; }
-  else { b.href = DOWNLOAD_URL; b.textContent = 'Baixar grátis no lançamento'; } // o aviso "venda abre em breve" fica no #soon
+  if (!VENDA_ABERTA) { b.href = DOWNLOAD_URL; b.textContent = 'Baixar grátis no lançamento'; return; } // o aviso "venda abre em breve" fica no #soon
+  b.textContent = 'Comprar por R$ 59';
+  b.addEventListener('click', async e => {
+    e.preventDefault();
+    if (b.getAttribute('aria-disabled')) return;
+    b.setAttribute('aria-disabled', 'true');
+    b.textContent = 'Abrindo o pagamento…';
+    try {
+      const r = await post('/checkout', {});
+      if (!r.url) throw new Error('sem url');
+      if (r.ref) store.set('dga-ref', r.ref);
+      location.href = r.url;
+    } catch {
+      b.removeAttribute('aria-disabled');
+      b.textContent = 'Comprar por R$ 59';
+      alert('Não foi possível abrir o pagamento. Tente de novo.');
+    }
+  });
 });
-$('soon').hidden = !!CHECKOUT_URL;
+$('soon').hidden = VENDA_ABERTA;
+
+function showKey(box, chave) {
+  box.querySelector('.key').textContent = chave;
+  box.hidden = false;
+}
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+  const k = b.parentElement.querySelector('.key');
+  try { await navigator.clipboard.writeText(k.textContent); b.textContent = 'Copiada!'; }
+  catch { getSelection().selectAllChildren(k); b.textContent = 'Selecionada: Ctrl+C'; }
+  setTimeout(() => { b.textContent = 'Copiar chave'; }, 2500);
+}));
+
+// volta do Mercado Pago: ?ref=<32 hex>#obrigado; Pix pode demorar, então consulta a cada 4 s por ~3 min
+const ref = new URLSearchParams(location.search).get('ref');
+if (/^[0-9a-f]{32}$/.test(ref || '')) {
+  store.set('dga-ref', ref);
+  $('obrigado').hidden = false;
+  const msg = $('obMsg'), t0 = Date.now();
+  const tentar = async () => {
+    let erro = false;
+    try {
+      const r = await post('/pedido', { ref });
+      if (r.chave) {
+        msg.textContent = 'Pagamento confirmado. Sua chave:';
+        return showKey($('obKey'), r.chave);
+      }
+    } catch { erro = true; }
+    if (Date.now() - t0 > 180000) {
+      msg.innerHTML = 'Ainda não confirmou. Se pagou com Pix pode levar alguns minutos — deixe esta página aberta ou use “Recuperar chave” com o número da operação do comprovante do Mercado Pago. <a href="#recuperar">Recuperar chave</a>';
+      return;
+    }
+    msg.textContent = erro ? 'Sem conexão com o servidor. Tentando de novo…' : 'Confirmando o pagamento… Com Pix pode levar alguns minutos. Deixe esta página aberta.';
+    setTimeout(tentar, 4000);
+  };
+  tentar();
+  if (location.hash === '#obrigado') $('obrigado').scrollIntoView();
+}
+
+$('recForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('recMsg'), btn = e.submitter;
+  $('recKey').hidden = true;
+  const pagamento = $('recPag').value.trim(), email = $('recMail').value.trim();
+  if (!/^\d{1,20}$/.test(pagamento) || !email) { m.textContent = 'Confira o número da operação (só números) e o e-mail.'; return; }
+  btn.disabled = true;
+  m.textContent = 'Procurando…';
+  try {
+    const r = await post('/recuperar', { pagamento, email });
+    if (r.chave) { m.textContent = 'Encontramos sua compra. Sua chave:'; showKey($('recKey'), r.chave); }
+    else m.textContent = r.status === 400 ? 'Confira o número da operação (só números) e o e-mail.' : 'Não encontramos uma compra com esses dados.';
+  } catch { m.textContent = 'Não foi possível consultar agora. Tente de novo.'; }
+  btn.disabled = false;
+});

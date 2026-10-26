@@ -324,3 +324,19 @@ kbd { font: 600 0.92em/1 "Archivo", sans-serif; }
 .amount small { font: 400 var(--step-small) "Archivo", sans-serif; color: var(--on-night-muted); }
 .soon { color: var(--ok); }
 .cta .smart { font-size: var(--step-small); color: var(--muted); max-width: 60ch; }
+
+.lic { padding: 80px var(--margin); display: grid; gap: 16px; justify-items: start; }
+.lic.dark { background: var(--night); color: var(--on-night); }
+.lic h2 { font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem); }
+.lic form { display: grid; gap: 14px; width: min(100%, 440px); }
+.lic label { display: grid; gap: 6px; font-size: var(--step-small); color: var(--muted); }
+.lic input { font: inherit; font-size: 1rem; padding: 12px 14px; border: 2px solid var(--ink); background: transparent; color: var(--ink); border-radius: 8px; min-width: 0; }
+.lic .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 700; padding: 0 24px; height: 48px; }
+.lic .btn:disabled { opacity: .6; }
+.keybox { display: grid; gap: 14px; justify-items: start; max-width: 100%; }
+.key { font: 700 clamp(1.1rem, 4.6vw, 2rem)/1.3 ui-monospace, Consolas, monospace; padding: 14px 18px; background: var(--night); color: var(--accent); border: 2px solid var(--accent); border-radius: 10px; max-width: 100%; overflow-wrap: anywhere; user-select: all; }
+.keybox ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.lic.dark a { color: var(--accent); }
+.btn[aria-disabled="true"] { opacity: .6; pointer-events: none; }
+
+.keybox[hidden] { display: none; } /* display do .keybox venceria o atributo hidden */
