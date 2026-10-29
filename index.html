@@ -179,14 +179,14 @@
       <h2><span class="tag">v1.2</span>5 temas, 5 formas de roda</h2>
       <p>Os temas mudam a forma da roda, dos cartões e dos avisos, não só a cor. Escolha em Configurações.</p>
       <div class="tabs" id="temaTabs" role="tablist" aria-label="Temas">
-        <button type="button" role="tab" aria-selected="true" data-t="classico" data-d="Clássico: gomos claros e arredondados, o visual de fábrica.">Clássico</button>
+        <button type="button" role="tab" aria-selected="false" data-t="classico" data-d="Clássico: gomos claros e arredondados, o visual de fábrica.">Clássico</button>
         <button type="button" role="tab" aria-selected="false" data-t="cofre" data-d="Cofre: mostrador escuro com marcações de relógio e detalhes dourados.">Cofre</button>
         <button type="button" role="tab" aria-selected="false" data-t="prisma" data-d="Prisma: vidro escuro com brilho em degradê.">Prisma</button>
         <button type="button" role="tab" aria-selected="false" data-t="etiqueta" data-d="Etiqueta: preto e amarelo, bordas grossas e listras de aviso.">Etiqueta</button>
-        <button type="button" role="tab" aria-selected="false" data-t="circuito" data-d="Circuito: trilhas e terminais em âmbar, com texto de terminal.">Circuito</button>
+        <button type="button" role="tab" aria-selected="true" data-t="circuito" data-d="Circuito: trilhas e terminais em âmbar, com texto de terminal.">Circuito</button>
       </div>
-      <img id="temaImg" src="assets/ui/temas/classico.webp" width="1263" height="950" alt="Roda do tema Clássico" loading="lazy">
-      <p id="temaTxt">Clássico: gomos claros e arredondados, o visual de fábrica.</p>
+      <img id="temaImg" src="assets/ui/temas/circuito.webp" width="1263" height="950" alt="Roda do tema Circuito" loading="lazy">
+      <p id="temaTxt">Circuito: trilhas e terminais em âmbar, com texto de terminal.</p>
     </section>
   </main>
 </div>
@@ -202,7 +202,7 @@
   <div class="answers">
     <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
-    <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. Enquanto a venda não abre, o download é gratuito.</p>
+    <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), por Pix ou cartão. A venda e o download abrem em breve.</p>
     <p><b>Como funciona a Promoção para teste?</b> Você cadastra o cartão no Mercado Pago e usa o app completo por 7 dias, sem pagar nada. Se gostar, não faça nada: no 8º dia cobramos R$ 59 uma única vez e a licença é sua para sempre. Se não quiser, cancele a assinatura no Mercado Pago (Seu perfil, Assinaturas) antes do fim do teste e nada é cobrado. Um teste por PC.</p>
     <p><b>Como funciona a chave de ativação?</b> Não enviamos e-mail: assim que o pagamento é aprovado, a chave aparece nesta página, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
     <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago) ou, no teste grátis, com o número da assinatura. No app, o botão “Perdi minha chave” também abre esta página.</p>
@@ -251,7 +251,7 @@
   </ul>
   <p><a class="btn big buy" href="#baixar" data-teste>Promoção para teste: 7 dias grátis</a></p>
   <p><a class="btn alt" href="#baixar" data-buy>Comprar por R$ 59</a></p>
-  <p class="soon" id="soon" hidden>Venda abre em breve — baixe grátis durante o lançamento.</p>
+  <p class="soon" id="soon" hidden>Venda e download abrem em breve.</p>
 </section>
 
 <section id="obrigado" class="lic dark" hidden aria-live="polite">
@@ -262,17 +262,16 @@
     <button class="btn" type="button" data-copy>Copiar chave</button>
     <p><b>Guarde esta chave.</b> Vale para 2 PCs.</p>
     <ol>
-      <li><a href="https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixe e instale</a> o DGA Conversor.</li>
+      <li>Baixe e instale o DGA Conversor (em breve, no lançamento).</li>
       <li>Abra o app (ícone na bandeja), vá em Configurações, cole a chave e clique em Ativar.</li>
     </ol>
   </div>
 </section>
 
 <section id="baixar" class="cta">
-  <p>Baixe, arraste o primeiro arquivo e aperte Shift no meio do caminho.</p>
+  <p>Em breve: baixe, arraste o primeiro arquivo e aperte Shift no meio do caminho.</p>
   <a class="btn buy" href="#preco" data-buy>Comprar por R$ 59</a>
-  <a class="btn alt" href="https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe">Baixar para Windows</a>
-  <a class="link" href="https://github.com/piressoftwares/dga-conversor/releases">Todas as versões</a>
+  <span class="btn alt" aria-disabled="true">Download em breve</span>
   <p class="smart"><b>O Windows mostrou um aviso?</b> Por ser um app novo, ele pode exibir “O Windows protegeu o computador”. É normal em apps recém-lançados. Clique em “Mais informações” e depois em “Executar assim mesmo”. O instalador vem só do GitHub oficial deste projeto.</p>
 </section>
 

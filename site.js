@@ -1,7 +1,6 @@
-// Venda (Cloudflare Worker + Mercado Pago). VENDA_ABERTA false = botão leva ao download gratuito.
+// Venda (Cloudflare Worker + Mercado Pago). VENDA_ABERTA false = botões ficam "Em breve" (sem download).
 const LIC_API = 'https://dga-licencas.pires-softwares.workers.dev';
 const VENDA_ABERTA = false;
-const DOWNLOAD_URL = 'https://github.com/piressoftwares/dga-conversor/releases/latest/download/DGA-Conversor-Setup.exe';
 
 // Demonstração da roda do DGA Conversor: mesma geometria e mesmos itens do app (assets/rodas.js vem do formats.js).
 document.documentElement.classList.add('js');
@@ -47,7 +46,7 @@ function label(text, x, y, size, color) {
 
 function pill(text) {
   const w = Math.max(64, text.length * 7.4 + 28);
-  return `<rect x="${-w / 2}" y="-17" width="${w}" height="34" rx="17" fill="#f4f4f6" stroke="#e2e2e7"/><text x="0" y="1" font-size="13" font-weight="600" fill="#1d1d1f" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`;
+  return `<rect x="${-w / 2}" y="-17" width="${w}" height="34" rx="17" fill="#0B0906" stroke="#7A4B00"/><text x="0" y="1" font-size="13" font-weight="600" fill="#EFE6D2" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`;
 }
 
 function render() {
@@ -70,11 +69,11 @@ function render() {
   }
   const it = items[S.focus], centre = it ? (S.opt >= 0 ? `${it.l} · ${it.o[S.opt]}` : it.l) : S.mode === 'actions' ? 'Ações' : R.labels[S.kind] || 'Arquivo';
   svg.innerHTML = `<defs>
-      <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ebebee"/></linearGradient>
+      <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1C160B"/><stop offset="1" stop-color="#0F0B05"/></linearGradient>
       <linearGradient id="go" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC53D"/><stop offset="1" stop-color="#FFB000"/></linearGradient>
     </defs>
-    <g class="disc"><circle r="${R_DISC}" fill="#e4e3ea"/><circle r="156.5" fill="none" stroke="#f7f7f9" stroke-width="3"/>
-    ${segs}<circle r="${R_HOLE - 4}" fill="#fff"/>${pill(centre.length > 22 ? centre.slice(0, 21) + '…' : centre)}<g class="ring">${ring}</g></g>`;
+    <g class="disc"><circle r="${R_DISC}" fill="#0B0906"/><circle r="156.5" fill="none" stroke="#7A4B00" stroke-width="3"/>
+    ${segs}<circle r="${R_HOLE - 4}" fill="#0B0906" stroke="#FFB000" stroke-width="2"/>${pill(centre.length > 22 ? centre.slice(0, 21) + '…' : centre)}<g class="ring">${ring}</g></g>`;
   svg.classList.toggle('closed', !S.open);
   document.querySelectorAll('#keys button').forEach(b => b.classList.toggle('on', S.open && b.dataset.mode === S.mode));
 }
@@ -404,7 +403,7 @@ const store = {
 };
 
 document.querySelectorAll('[data-buy]').forEach(b => {
-  if (!VENDA_ABERTA) { b.href = DOWNLOAD_URL; b.textContent = 'Baixar grátis no lançamento'; return; } // o aviso "venda abre em breve" fica no #soon
+  if (!VENDA_ABERTA) { b.removeAttribute('href'); b.setAttribute('aria-disabled', 'true'); b.textContent = 'Em breve'; return; } // o aviso fica no #soon
   b.textContent = 'Comprar por R$ 59';
   b.addEventListener('click', async e => {
     e.preventDefault();
