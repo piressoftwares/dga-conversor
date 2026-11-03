@@ -1,6 +1,6 @@
 // Venda (Cloudflare Worker + Mercado Pago). VENDA_ABERTA false = botões ficam "Em breve" (sem download).
 const LIC_API = 'https://dga-licencas.pires-softwares.workers.dev';
-const VENDA_ABERTA = false;
+const VENDA_ABERTA = true;
 
 // Demonstração da roda do DGA Conversor: mesma geometria e mesmos itens do app (assets/rodas.js vem do formats.js).
 document.documentElement.classList.add('js');
