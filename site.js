@@ -398,10 +398,10 @@ document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('c
 // PREENCHER (dono): Firebase > Configurações do projeto > Seus apps > App da Web > Configuração do SDK.
 // Estes valores são públicos (o apiKey do Firebase Web não é segredo); o projectId é o mesmo FIREBASE_PROJECT_ID do licenca/wrangler.toml.
 const FIREBASE_CONFIG = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  appId: '',
+  apiKey: 'AIzaSyAxfV4fdxdb_O7nSiEr2vyuM73yZyFvnmA',
+  authDomain: 'dga-conversor-baf75.firebaseapp.com',
+  projectId: 'dga-conversor-baf75',
+  appId: '1:887677484679:web:81bf0836499cd5351fc222',
 };
 const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
 const SENHA = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
