@@ -275,8 +275,13 @@
     <p>No app: Configurações, Licença, cole a chave e clique em Ativar. Cada chave vale para 2 PCs.</p>
   </div>
   <p><button class="btn alt" type="button" id="sair" hidden>Sair da conta</button></p>
-  <!-- PLACEHOLDER privacidade: o dono precisa aprovar o texto (dados guardados, finalidade, como excluir a conta) antes de abrir a venda. -->
-  <p class="note">Privacidade: texto em aprovação.</p>
+  <details id="excluir" hidden>
+    <summary>Excluir conta</summary>
+    <p>Isto revoga todas as suas chaves, inclusive a licença comprada (o app para de funcionar nos PCs), cancela o teste grátis em andamento no Mercado Pago e apaga sua conta. Não dá para desfazer.</p>
+    <label>Para confirmar, digite EXCLUIR<input id="excluirTxt" autocomplete="off"></label>
+    <p><button class="btn alt" type="button" id="excluirBtn" disabled>Excluir conta</button></p>
+  </details>
+  <p class="note">Guardamos o e-mail da sua conta, o identificador da conta no Firebase (Google), as chaves emitidas, quantos PCs estão ativados e as datas de criação, compra, teste e revogação. Não guardamos cartão: o pagamento é feito no Mercado Pago. Usamos esses dados só para ligar sua compra e seu teste à sua licença e para mostrar sua chave em Minha licença. Mantemos enquanto a conta existir. Para excluir a conta e os dados, use o botão Excluir conta em Minha licença. Os registros de pagamento ficam no Mercado Pago pelo prazo que a lei exige.</p>
 </section>
 
 <section id="obrigado" class="lic dark" hidden aria-live="polite">

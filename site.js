@@ -413,7 +413,7 @@ const store = {
   get: k => { try { return localStorage.getItem(k); } catch { return null; } },
   del: k => { try { localStorage.removeItem(k); } catch { /* idem */ } },
 };
-let fb = null, user = null, modo = 'entrar';
+let fb = null, user = null, modo = 'entrar', fimMsg = ''; // fimMsg: aviso da exclusão, mostrado quando a sessão fecha
 const msg = t => { $('contaMsg').textContent = t; };
 const show = (sel, on) => document.querySelectorAll(sel).forEach(el => { el.hidden = !on; });
 
@@ -460,9 +460,11 @@ function refresh() {
   show('[data-conta]', on);
   show('[data-form]', false);
   if (!on) setModo(modo);
+  if (!on && fimMsg) { msg(fimMsg); fimMsg = ''; }
   $('verificar').hidden = !on || ok;
   $('logado').hidden = !ok;
   $('sair').hidden = !on;
+  $('excluir').hidden = !on;
   $('contaPreco').hidden = !on;
   if (on) {
     $('vEmail').textContent = user.email;
@@ -567,6 +569,25 @@ $('reenviar').addEventListener('click', async () => {
 });
 $('sair').addEventListener('click', () => fb.A.signOut(fb.auth));
 
+// Exclusão em dois passos: digitar EXCLUIR libera o botão. O Worker apaga os dados; depois apaga o login no Firebase e sai.
+$('excluirTxt').addEventListener('input', e => { $('excluirBtn').disabled = e.target.value.trim() !== 'EXCLUIR'; });
+$('excluirBtn').addEventListener('click', async () => {
+  const b = $('excluirBtn');
+  b.disabled = true;
+  let r;
+  try { r = await api('/conta/excluir', {}); } catch { r = {}; }
+  if (!r.ok) { b.disabled = false; return msg('Não foi possível excluir agora. Tente de novo em alguns minutos.'); }
+  $('excluirTxt').value = '';
+  fimMsg = 'Conta excluída. Seus dados e suas chaves foram apagados.';
+  try { await fb.A.deleteUser(user); }
+  catch (err) {
+    // o Firebase pede login recente para apagar o login; os dados já saíram do Worker
+    fimMsg = 'Seus dados e suas chaves foram apagados. Para apagar também o login, entre de novo e clique em Excluir conta outra vez.';
+    console.warn(err?.code);
+  }
+  await fb.A.signOut(fb.auth).catch(() => {});
+});
+
 document.querySelectorAll('[data-teste]').forEach(b => {
   if (!VENDA_ABERTA) { b.hidden = true; return; }
   b.addEventListener('click', async e => {
@@ -584,8 +605,8 @@ document.querySelectorAll('[data-teste]').forEach(b => {
     b.textContent = 'Abrindo o Mercado Pago…';
     try {
       const r = await api('/teste', {});
-      if (!r.url) throw new Error('sem url');
-      location.href = r.url;
+      if (!r.init_point) throw new Error('sem init_point');
+      location.href = r.init_point;
     } catch {
       b.removeAttribute('aria-disabled');
       b.textContent = txt;
