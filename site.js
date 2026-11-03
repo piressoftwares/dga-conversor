@@ -402,26 +402,6 @@ const store = {
   get: k => { try { return localStorage.getItem(k); } catch { return null; } },
 };
 
-document.querySelectorAll('[data-buy]').forEach(b => {
-  if (!VENDA_ABERTA) { b.removeAttribute('href'); b.setAttribute('aria-disabled', 'true'); b.textContent = 'Em breve'; return; } // o aviso fica no #soon
-  b.textContent = 'Comprar por R$ 59';
-  b.addEventListener('click', async e => {
-    e.preventDefault();
-    if (b.getAttribute('aria-disabled')) return;
-    b.setAttribute('aria-disabled', 'true');
-    b.textContent = 'Abrindo o pagamento…';
-    try {
-      const r = await post('/checkout', {});
-      if (!r.url) throw new Error('sem url');
-      if (r.ref) store.set('dga-ref', r.ref);
-      location.href = r.url;
-    } catch {
-      b.removeAttribute('aria-disabled');
-      b.textContent = 'Comprar por R$ 59';
-      alert('Não foi possível abrir o pagamento. Tente de novo.');
-    }
-  });
-});
 document.querySelectorAll('[data-teste]').forEach(b => {
   if (!VENDA_ABERTA) { b.hidden = true; return; }
   b.addEventListener('click', async e => {
@@ -437,7 +417,7 @@ document.querySelectorAll('[data-teste]').forEach(b => {
     } catch {
       b.removeAttribute('aria-disabled');
       b.textContent = txt;
-      alert('Não foi possível abrir a Promoção para teste. Tente de novo.');
+      alert('Não foi possível abrir os 7 dias grátis. Tente de novo.');
     }
   });
 });
@@ -454,12 +434,12 @@ document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click'
   setTimeout(() => { b.textContent = 'Copiar chave'; }, 2500);
 }));
 
-// volta da Promoção para teste: ?teste=1&preapproval_id=<32 hex>; o cartão pode levar alguns segundos para ser aceito
+// volta dos 7 dias grátis: ?teste=1&preapproval_id=<32 hex>; o cartão pode levar alguns segundos para ser aceito
 const qs = new URLSearchParams(location.search), sub = qs.get('preapproval_id');
 const ref = qs.get('ref');
 if (qs.has('teste')) {
   $('obrigado').hidden = false;
-  $('obTitulo').textContent = 'Promoção para teste ativada!';
+  $('obTitulo').textContent = '7 dias grátis ativados!';
   const msg = $('obMsg'), t0 = Date.now();
   const semId = 'Para pegar sua chave, use “Perdi minha chave” com o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). <a href="#recuperar">Perdi minha chave</a>';
   const tentar = async () => {
