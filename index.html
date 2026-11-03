@@ -25,6 +25,9 @@
   <a href="#temas">Temas</a>
   <a href="#formatos">Formatos</a>
   <a href="#preco">Preço</a>
+  <a href="#licenca" data-conta hidden>Minha licença</a>
+  <a href="#licenca" data-modo="entrar" data-deslogado hidden>Entrar</a>
+  <a href="#licenca" data-modo="criar" data-deslogado hidden>Criar conta</a>
   <a class="btn" href="#preco">Comprar</a>
 </nav>
 
@@ -203,9 +206,9 @@
     <p><b>Como protejo um arquivo com senha?</b> Pela roda, em Encriptar: .dga (AES-256-GCM, só o DGA Conversor abre), ZIP ou PDF com senha. Se esquecer a senha, não há como recuperar.</p>
     <p><b>O app atualiza sozinho?</b> Sim, a partir da versão 1.1.</p>
     <p><b>Quanto custa?</b> Compra única: R$ 59 de lançamento (depois R$ 79), no cartão pelo Mercado Pago. A venda e o download abrem em breve.</p>
-    <p><b>Como funcionam os 7 dias grátis?</b> Você cadastra o cartão no Mercado Pago e usa o app completo por 7 dias, sem pagar nada. Se gostar, não faça nada: no 8º dia cobramos R$ 59 uma única vez e a licença é sua para sempre. Se não quiser, cancele a assinatura no Mercado Pago (Seu perfil, Assinaturas) antes do 8º dia e nada é cobrado. Um teste por PC.</p>
-    <p><b>Como funciona a chave de ativação?</b> Não enviamos e-mail: assim que o pagamento é aprovado, a chave aparece nesta página, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
-    <p><b>Perdi minha chave.</b> <a href="#recuperar">Recupere aqui</a> com o número da operação (no comprovante do Mercado Pago) ou, no teste grátis, com o número da assinatura. No app, o botão “Perdi minha chave” também abre esta página.</p>
+    <p><b>Como funcionam os 7 dias grátis?</b> Você cria sua conta com e-mail e senha, confirma o e-mail, cadastra o cartão no Mercado Pago e usa o app completo por 7 dias, sem pagar nada. Se gostar, não faça nada: no 8º dia cobramos R$ 59 uma única vez e a licença é sua para sempre. Se não quiser, cancele a assinatura no Mercado Pago (Seu perfil, Assinaturas) antes do 8º dia e nada é cobrado. Um teste por PC.</p>
+    <p><b>Como funciona a chave de ativação?</b> Você entra na sua conta antes de começar. Assim que o Mercado Pago aprovar, a chave fica na sua conta, em <a href="#licenca">Minha licença</a>, para copiar. Ela vale para 2 PCs. No app, abra Configurações, área Licença, cole a chave e clique em Ativar; depois ele funciona sem internet.</p>
+    <p><b>Perdi minha chave.</b> A chave fica na sua conta: <a href="#licenca">entre</a> com o e-mail e a senha que usou no teste ou na compra e abra Minha licença. Esqueceu a senha? Use “Esqueci a senha” na tela de entrar. No app, o botão “Perdi minha chave” também abre esta página.</p>
     <p><b>Posso devolver?</b> Os 7 dias grátis são a sua avaliação: cancele antes do 8º dia e nada é cobrado. Depois da cobrança, não há reembolso pelo site.</p>
     <p><b>Troquei de PC. E agora?</b> No app antigo, em Configurações, Licença, clique em “Desativar este PC”: a vaga é liberada e você ativa a mesma chave no novo.</p>
     <p><b>As atualizações são pagas?</b> A compra inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</p>
@@ -224,21 +227,6 @@
   </div>
 </section>
 
-<section id="recuperar" class="lic">
-  <h2>Perdi minha chave</h2>
-  <p>Informe o número da operação que está no comprovante do Mercado Pago (e-mail ou app do MP). Nos 7 dias grátis, use o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). Não guardamos e-mail nem cartão.</p>
-  <form id="recForm" novalidate>
-    <label>Número da operação ou da assinatura (no Mercado Pago)<input id="recPag" autocomplete="off" required></label>
-    <button class="btn" type="submit">Recuperar</button>
-  </form>
-  <p id="recMsg" role="status"></p>
-  <div class="keybox" id="recKey" hidden>
-    <code class="key"></code>
-    <button class="btn" type="button" data-copy>Copiar chave</button>
-    <p><b>Guarde esta chave.</b> No app: Configurações, Licença, cole a chave e clique em Ativar. Vale para 2 PCs.</p>
-  </div>
-</section>
-
 <section id="preco" class="price">
   <img class="appicon" src="assets/icon.svg" width="72" height="72" alt="Ícone do DGA Conversor" loading="lazy">
   <h2>Compra única</h2>
@@ -249,22 +237,52 @@
     <li>Chave de ativação para 2 PCs.</li>
     <li>Inclui as atualizações da versão atual. Versões principais novas podem ser cobradas à parte, com desconto para quem já comprou.</li>
   </ul>
+  <p class="conta-linha" id="contaPreco" hidden></p>
+  <p data-deslogado hidden><a class="btn alt" href="#licenca" data-modo="entrar" data-volta="preco">Entrar</a> <a class="btn alt" href="#licenca" data-modo="criar" data-volta="preco">Criar conta</a></p>
   <p><a class="btn big buy" href="#baixar" data-teste>Começar 7 dias grátis</a></p>
   <p class="soon" id="soon" hidden>Venda e download abrem em breve.</p>
 </section>
 
+<section id="licenca" class="lic" aria-live="polite">
+  <span id="recuperar"></span><!-- o app abre #recuperar em "Perdi minha chave" -->
+  <h2>Minha licença</h2>
+  <p id="contaMsg">Entre com o e-mail e a senha que você usou no teste ou na compra para ver suas chaves.</p>
+  <form id="fEntrar" data-form="entrar" novalidate hidden>
+    <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+    <label>Senha<input name="senha" type="password" autocomplete="current-password" required></label>
+    <button class="btn" type="submit">Entrar</button>
+    <p><a href="#licenca" data-modo="criar">Criar conta</a> · <a href="#licenca" data-modo="esqueci">Esqueci a senha</a></p>
+  </form>
+  <form id="fCriar" data-form="criar" novalidate hidden>
+    <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+    <label>Senha (8 ou mais caracteres, com letra e número)<input name="senha" type="password" autocomplete="new-password" minlength="8" required></label>
+    <label>Confirmar a senha<input name="senha2" type="password" autocomplete="new-password" minlength="8" required></label>
+    <button class="btn" type="submit">Criar conta</button>
+    <p><a href="#licenca" data-modo="entrar">Já tenho conta: entrar</a></p>
+  </form>
+  <form id="fEsqueci" data-form="esqueci" novalidate hidden>
+    <label>E-mail da conta<input name="email" type="email" autocomplete="email" required></label>
+    <button class="btn" type="submit">Enviar link para criar nova senha</button>
+    <p><a href="#licenca" data-modo="entrar">Voltar para entrar</a></p>
+  </form>
+  <div class="keybox" id="verificar" hidden>
+    <p>Falta confirmar seu e-mail. Enviamos um link para <b id="vEmail"></b>: abra o e-mail (confira também o spam), clique no link e volte aqui. A compra e o teste grátis só liberam depois disso.</p>
+    <p><button class="btn" type="button" id="jaConfirmei">Já confirmei</button> <button class="btn alt" type="button" id="reenviar">Reenviar o e-mail</button></p>
+  </div>
+  <div class="keybox" id="logado" hidden>
+    <p id="contaEmail"></p>
+    <ul class="chaves" id="chaves"></ul>
+    <p>No app: Configurações, Licença, cole a chave e clique em Ativar. Cada chave vale para 2 PCs.</p>
+  </div>
+  <p><button class="btn alt" type="button" id="sair" hidden>Sair da conta</button></p>
+  <!-- PLACEHOLDER privacidade: o dono precisa aprovar o texto (dados guardados, finalidade, como excluir a conta) antes de abrir a venda. -->
+  <p class="note">Privacidade: texto em aprovação.</p>
+</section>
+
 <section id="obrigado" class="lic dark" hidden aria-live="polite">
   <h2 id="obTitulo">Pagamento recebido!</h2>
-  <p id="obMsg">Confirmando o pagamento…</p>
-  <div class="keybox" id="obKey" hidden>
-    <code class="key"></code>
-    <button class="btn" type="button" data-copy>Copiar chave</button>
-    <p><b>Guarde esta chave.</b> Vale para 2 PCs.</p>
-    <ol>
-      <li>Baixe e instale o DGA Conversor (em breve, no lançamento).</li>
-      <li>Abra o app (ícone na bandeja), vá em Configurações, cole a chave e clique em Ativar.</li>
-    </ol>
-  </div>
+  <p id="obMsg">Confirmando com o Mercado Pago…</p>
+  <p><a class="btn" href="#licenca">Abrir Minha licença</a></p>
 </section>
 
 <section id="baixar" class="cta">
@@ -285,7 +303,7 @@
       <li><a href="#temas">Temas</a></li>
       <li><a href="#formatos">Formatos</a></li>
       <li><a href="#preco">Preço</a></li>
-      <li><a href="#recuperar">Perdi minha chave</a></li>
+      <li><a href="#licenca">Perdi minha chave: entre para ver</a></li>
       <li><a href="#perguntas">Perguntas</a></li>
       <li><a href="#baixar">Baixar</a></li>
     </ul>

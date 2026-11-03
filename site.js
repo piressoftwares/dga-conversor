@@ -394,24 +394,196 @@ document.querySelectorAll('#temaTabs button').forEach(b => b.addEventListener('c
   document.getElementById('temaTxt').textContent = b.dataset.d;
 }));
 
-// ---------- venda e licença ----------
-const post = (rota, corpo) => fetch(LIC_API + rota, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
-  .then(async r => ({ status: r.status, ...(await r.json().catch(() => ({}))) }));
+// ---------- conta (Firebase Auth) e licença ----------
+// PREENCHER (dono): Firebase > Configurações do projeto > Seus apps > App da Web > Configuração do SDK.
+// Estes valores são públicos (o apiKey do Firebase Web não é segredo); o projectId é o mesmo FIREBASE_PROJECT_ID do licenca/wrangler.toml.
+const FIREBASE_CONFIG = {
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  appId: '',
+};
+const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
+const SENHA = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const VOLTA = () => ({ url: location.origin + location.pathname + '#licenca' }); // link do e-mail do Firebase volta para cá
+
 const store = {
   set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sem armazenamento: segue sem guardar */ } },
   get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+  del: k => { try { localStorage.removeItem(k); } catch { /* idem */ } },
 };
+let fb = null, user = null, modo = 'entrar';
+const msg = t => { $('contaMsg').textContent = t; };
+const show = (sel, on) => document.querySelectorAll(sel).forEach(el => { el.hidden = !on; });
+
+// Chamada ao Worker com o ID token. 401 uma vez: força token novo (o e-mail pode ter sido confirmado depois do token guardado).
+async function api(rota, corpo) {
+  const chamar = async novo => {
+    const headers = { Authorization: 'Bearer ' + await user.getIdToken(novo) };
+    const r = await fetch(LIC_API + rota, corpo === undefined ? { headers }
+      : { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+    return { status: r.status, ...(await r.json().catch(() => ({}))) };
+  };
+  const r = await chamar(false);
+  return r.status === 401 ? chamar(true) : r;
+}
+
+const ERROS = {
+  'auth/email-already-in-use': 'Já existe uma conta com este e-mail. Entre ou use “Esqueci a senha”.',
+  'auth/invalid-credential': 'E-mail ou senha incorretos.',
+  'auth/wrong-password': 'E-mail ou senha incorretos.',
+  'auth/user-not-found': 'E-mail ou senha incorretos.',
+  'auth/invalid-email': 'Confira o e-mail.',
+  'auth/weak-password': 'Senha fraca: use 8 ou mais caracteres, com letra e número.',
+  'auth/password-does-not-meet-requirements': 'Senha fraca: use 8 ou mais caracteres, com letra e número.',
+  'auth/too-many-requests': 'Muitas tentativas. Espere alguns minutos e tente de novo.',
+  'auth/network-request-failed': 'Sem conexão. Confira a internet e tente de novo.',
+};
+const erro = e => ERROS[e?.code] || 'Não foi possível agora. Tente de novo.';
+
+function setModo(m) {
+  modo = m;
+  if (!user) document.querySelectorAll('[data-form]').forEach(f => { f.hidden = f.dataset.form !== m; });
+  if (!user) msg(m === 'criar' ? 'Crie sua conta. Depois confirme o e-mail pelo link que enviamos.' : m === 'esqueci' ? 'Enviamos um link para você criar uma senha nova.' : 'Entre com o e-mail e a senha que você usou no teste ou na compra para ver suas chaves.');
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-modo]');
+  if (!a) return;
+  if (a.dataset.volta) store.set('dga-volta', a.dataset.volta);
+  setModo(a.dataset.modo);
+});
+
+function refresh() {
+  const on = !!user, ok = on && user.emailVerified;
+  show('[data-deslogado]', !on);
+  show('[data-conta]', on);
+  show('[data-form]', false);
+  if (!on) setModo(modo);
+  $('verificar').hidden = !on || ok;
+  $('logado').hidden = !ok;
+  $('sair').hidden = !on;
+  $('contaPreco').hidden = !on;
+  if (on) {
+    $('vEmail').textContent = user.email;
+    $('contaEmail').textContent = 'Conta: ' + user.email;
+    $('contaPreco').textContent = ok ? 'Conta: ' + user.email : 'Confirme seu e-mail (link em Minha licença) para começar o teste.';
+    msg(ok ? 'Suas chaves:' : 'Confirme seu e-mail para liberar o teste grátis e a compra.');
+  }
+  if (!ok) return;
+  if (store.get('dga-sub')) return ligarTeste(store.get('dga-sub'));
+  loadConta();
+  if (store.get('dga-volta') === 'preco') { store.del('dga-volta'); $('preco').scrollIntoView(); }
+}
+
+function linha(ul, partes) {
+  const li = document.createElement('li');
+  for (const [tag, texto, cls] of partes) {
+    const el = document.createElement(tag);
+    el.textContent = texto;
+    if (cls) el.className = cls;
+    if (tag === 'button') { el.type = 'button'; el.dataset.copy = ''; el.className = 'btn alt'; }
+    li.appendChild(el);
+  }
+  ul.appendChild(li);
+}
+
+async function loadConta() {
+  const ul = $('chaves');
+  ul.replaceChildren();
+  let r;
+  try { r = await api('/conta'); } catch { r = {}; }
+  if (r.status !== 200) return msg('Não foi possível carregar suas chaves agora. Recarregue a página para tentar de novo.');
+  for (const c of r.chaves || []) {
+    const tipo = c.tipo === 'teste' ? 'Teste grátis de 7 dias' : 'Licença vitalícia';
+    const uso = `${c.maquinas} de ${c.max} PCs em uso`;
+    linha(ul, [['code', c.chave, 'key'], ['button', 'Copiar chave'], ['small', c.revogada ? `${tipo} · revogada${c.motivo ? ` (${c.motivo})` : ''}` : `${tipo} · ${uso}`]]);
+  }
+  for (const p of r.pendentes || []) {
+    linha(ul, [['small', p.tipo === 'teste' ? 'Teste grátis: aguardando o Mercado Pago aceitar o cartão. Recarregue a página em alguns instantes.' : 'Compra: aguardando a aprovação do pagamento.']]);
+  }
+  if (!ul.children.length) msg('Nenhuma chave nesta conta ainda. Comece os 7 dias grátis em Preço.');
+}
+
+// Volta do Mercado Pago: liga a assinatura a esta conta. Sem sessão, guarda o id e liga depois de entrar.
+async function ligarTeste(sub) {
+  store.del('dga-sub');
+  $('obrigado').hidden = false;
+  const ob = $('obMsg');
+  let r;
+  try { r = await api('/assinatura', { assinatura: sub }); } catch { r = {}; }
+  if (r.chave) ob.textContent = 'Sua chave está na sua conta, em Minha licença. Se não cancelar a assinatura no Mercado Pago, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre.';
+  else if (r.pendente) ob.textContent = 'O Mercado Pago ainda está confirmando o cartão. Em alguns instantes a chave aparece na sua conta, em Minha licença.';
+  else ob.textContent = r.status === 429 ? 'Muitas tentativas. Espere alguns minutos e abra Minha licença.' : 'Não encontramos este teste na sua conta. Entre com a mesma conta em que você clicou em “Começar 7 dias grátis”.';
+  loadConta();
+  if (r.pendente) setTimeout(loadConta, 15000);
+}
+
+async function startAuth() {
+  if (!FIREBASE_CONFIG.apiKey) { msg('As contas abrem junto com a venda.'); return; }
+  try {
+    const [{ initializeApp }, A] = await Promise.all([import(FB_SDK + 'firebase-app.js'), import(FB_SDK + 'firebase-auth.js')]);
+    fb = { auth: A.getAuth(initializeApp(FIREBASE_CONFIG)), A };
+    A.onAuthStateChanged(fb.auth, u => { user = u; refresh(); });
+  } catch { msg('Não foi possível carregar o login. Recarregue a página.'); }
+}
+
+document.querySelectorAll('[data-form]').forEach(f => f.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!fb) return;
+  const { A, auth } = fb, email = f.email.value.trim(), btn = f.querySelector('button');
+  if (!EMAIL.test(email)) return msg('Confira o e-mail.');
+  if (f.dataset.form === 'criar') {
+    if (!SENHA.test(f.senha.value)) return msg('A senha precisa de 8 ou mais caracteres, com pelo menos uma letra e um número.');
+    if (f.senha.value !== f.senha2.value) return msg('As duas senhas não são iguais.');
+  }
+  btn.disabled = true;
+  try {
+    if (f.dataset.form === 'entrar') await A.signInWithEmailAndPassword(auth, email, f.senha.value);
+    else if (f.dataset.form === 'criar') {
+      const { user: u } = await A.createUserWithEmailAndPassword(auth, email, f.senha.value);
+      await A.sendEmailVerification(u, VOLTA());
+    } else {
+      // mesma resposta exista ou não a conta
+      await A.sendPasswordResetEmail(auth, email, VOLTA()).catch(err => { if (err.code !== 'auth/user-not-found') throw err; });
+      msg('Se existir uma conta com este e-mail, enviamos o link para criar a senha nova. Confira também o spam.');
+    }
+    f.reset();
+  } catch (err) { msg(erro(err)); }
+  btn.disabled = false;
+}));
+
+$('jaConfirmei').addEventListener('click', async () => {
+  try {
+    await user.reload();
+    if (!user.emailVerified) return msg('Ainda não confirmado. Clique no link do e-mail e tente de novo.');
+    await user.getIdToken(true); // token novo com e-mail verificado
+    refresh();
+  } catch (err) { msg(erro(err)); }
+});
+$('reenviar').addEventListener('click', async () => {
+  try { await fb.A.sendEmailVerification(user, VOLTA()); msg('Enviamos de novo. Confira também o spam.'); }
+  catch (err) { msg(erro(err)); }
+});
+$('sair').addEventListener('click', () => fb.A.signOut(fb.auth));
 
 document.querySelectorAll('[data-teste]').forEach(b => {
   if (!VENDA_ABERTA) { b.hidden = true; return; }
   b.addEventListener('click', async e => {
     e.preventDefault();
     if (b.getAttribute('aria-disabled')) return;
+    // sem conta confirmada: vai para entrar/confirmar e volta ao preço depois
+    if (!user || !user.emailVerified) {
+      store.set('dga-volta', 'preco');
+      if (!user) setModo('entrar');
+      $('licenca').scrollIntoView();
+      return;
+    }
     b.setAttribute('aria-disabled', 'true');
     const txt = b.textContent;
     b.textContent = 'Abrindo o Mercado Pago…';
     try {
-      const r = await post('/teste', {});
+      const r = await api('/teste', {});
       if (!r.url) throw new Error('sem url');
       location.href = r.url;
     } catch {
@@ -423,78 +595,24 @@ document.querySelectorAll('[data-teste]').forEach(b => {
 });
 $('soon').hidden = VENDA_ABERTA;
 
-function showKey(box, chave) {
-  box.querySelector('.key').textContent = chave;
-  box.hidden = false;
-}
-document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
   const k = b.parentElement.querySelector('.key');
   try { await navigator.clipboard.writeText(k.textContent); b.textContent = 'Copiada!'; }
   catch { getSelection().selectAllChildren(k); b.textContent = 'Selecionada: Ctrl+C'; }
   setTimeout(() => { b.textContent = 'Copiar chave'; }, 2500);
-}));
+});
 
-// volta dos 7 dias grátis: ?teste=1&preapproval_id=<32 hex>; o cartão pode levar alguns segundos para ser aceito
+// volta dos 7 dias grátis: ?teste=1&preapproval_id=<32 hex>; o id sai da barra de endereço e fica guardado até ligar à conta
 const qs = new URLSearchParams(location.search), sub = qs.get('preapproval_id');
-const ref = qs.get('ref');
-// tira os ids da barra de endereço (histórico, print, link copiado); o ref fica guardado no store
-if (sub || ref) history.replaceState(null, '', location.pathname + location.hash);
+if (sub) history.replaceState(null, '', location.pathname + location.hash);
 if (qs.has('teste')) {
   $('obrigado').hidden = false;
   $('obTitulo').textContent = '7 dias grátis ativados!';
-  const msg = $('obMsg');
-  const semId = 'Se não receber a chave, use “Perdi minha chave” com o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). <a href="#recuperar">Perdi minha chave</a>';
-  // a chave do teste vai por e-mail; se o cartão ainda não foi aceito, o servidor manda quando o Mercado Pago confirmar
-  msg.innerHTML = 'Assim que o Mercado Pago confirmar a assinatura, enviamos a chave para o e-mail da sua conta do Mercado Pago (confira também o spam). Se não cancelar a assinatura, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre. ' + semId;
-  if (/^[0-9a-f]{32}$/.test(sub || '')) post('/assinatura', { assinatura: sub }).catch(() => {});
+  $('obMsg').textContent = 'Sua chave está na sua conta, em Minha licença. Entre com a mesma conta, se ainda não estiver conectado.';
+  if (/^[0-9a-f]{32}$/.test(sub || '')) store.set('dga-sub', sub); // refresh() liga assim que a sessão do Firebase carregar
   $('obrigado').scrollIntoView();
-} else if (/^[0-9a-f]{32}$/.test(ref || '')) {
-  store.set('dga-ref', ref);
-  $('obrigado').hidden = false;
-  const msg = $('obMsg'), t0 = Date.now();
-  const tentar = async () => {
-    let erro = false;
-    try {
-      const r = await post('/pedido', { ref });
-      if (r.chave) {
-        msg.textContent = 'Pagamento confirmado. Sua chave:';
-        return showKey($('obKey'), r.chave);
-      }
-    } catch { erro = true; }
-    if (Date.now() - t0 > 180000) {
-      msg.innerHTML = 'Ainda não confirmou. Se pagou com Pix pode levar alguns minutos — deixe esta página aberta ou use “Recuperar chave” com o número da operação do comprovante do Mercado Pago. <a href="#recuperar">Recuperar chave</a>';
-      return;
-    }
-    msg.textContent = erro ? 'Sem conexão com o servidor. Tentando de novo…' : 'Confirmando o pagamento… Com Pix pode levar alguns minutos. Deixe esta página aberta.';
-    setTimeout(tentar, 4000);
-  };
-  tentar();
-  if (location.hash === '#obrigado') $('obrigado').scrollIntoView();
-} else if (/^[0-9a-f]{32}$/.test(store.get('dga-ref') || '')) {
-  // Pix não volta sozinho do Mercado Pago: ao reabrir o site, mostra a chave se o pedido guardado já foi pago
-  post('/pedido', { ref: store.get('dga-ref') }).then(r => {
-    if (!r.chave) return;
-    $('obrigado').hidden = false;
-    $('obMsg').textContent = 'Pagamento confirmado. Sua chave:';
-    showKey($('obKey'), r.chave);
-  }).catch(() => {});
 }
-
-$('recForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const m = $('recMsg'), btn = e.submitter;
-  $('recKey').hidden = true;
-  const pagamento = $('recPag').value.trim().toLowerCase();
-  const assinatura = /^[0-9a-f]{32}$/.test(pagamento);
-  if (!assinatura && !/^\d{1,20}$/.test(pagamento)) { m.textContent = 'Confira o número: a operação tem só números; a assinatura tem 32 letras e números.'; return; }
-  btn.disabled = true;
-  m.textContent = 'Procurando…';
-  try {
-    const r = assinatura ? await post('/assinatura', { assinatura: pagamento }) : await post('/recuperar', { pagamento });
-    // o servidor nunca devolve a chave aqui: manda para o e-mail do comprador no Mercado Pago
-    if (r.ok) m.textContent = 'Se o pagamento existir, enviamos a chave para o e-mail do comprador (o da conta do Mercado Pago). Confira também o spam.';
-    else m.textContent = r.status === 429 ? 'Muitas tentativas. Espere alguns minutos e tente de novo.' : r.status === 400 ? 'Confira o número da operação (só números).' : 'Não foi possível consultar agora. Tente de novo.';
-  } catch { m.textContent = 'Não foi possível consultar agora. Tente de novo.'; }
-  btn.disabled = false;
-});
+startAuth();
 // Assinatura (não remover): PS-2026-11-03-d0d36ea91566
