@@ -437,24 +437,16 @@ document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click'
 // volta dos 7 dias grátis: ?teste=1&preapproval_id=<32 hex>; o cartão pode levar alguns segundos para ser aceito
 const qs = new URLSearchParams(location.search), sub = qs.get('preapproval_id');
 const ref = qs.get('ref');
+// tira os ids da barra de endereço (histórico, print, link copiado); o ref fica guardado no store
+if (sub || ref) history.replaceState(null, '', location.pathname + location.hash);
 if (qs.has('teste')) {
   $('obrigado').hidden = false;
   $('obTitulo').textContent = '7 dias grátis ativados!';
-  const msg = $('obMsg'), t0 = Date.now();
-  const semId = 'Para pegar sua chave, use “Perdi minha chave” com o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). <a href="#recuperar">Perdi minha chave</a>';
-  const tentar = async () => {
-    try {
-      const r = await post('/assinatura', { assinatura: sub });
-      if (r.chave) {
-        msg.textContent = 'Use 7 dias grátis. Se não cancelar a assinatura no Mercado Pago, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre. Sua chave:';
-        return showKey($('obKey'), r.chave);
-      }
-    } catch {}
-    if (Date.now() - t0 > 120000) { msg.innerHTML = semId; return; }
-    msg.textContent = 'Confirmando a assinatura no Mercado Pago…';
-    setTimeout(tentar, 4000);
-  };
-  if (/^[0-9a-f]{32}$/.test(sub || '')) tentar(); else msg.innerHTML = semId;
+  const msg = $('obMsg');
+  const semId = 'Se não receber a chave, use “Perdi minha chave” com o número da assinatura (no Mercado Pago, em Seu perfil, Assinaturas). <a href="#recuperar">Perdi minha chave</a>';
+  // a chave do teste vai por e-mail; se o cartão ainda não foi aceito, o servidor manda quando o Mercado Pago confirmar
+  msg.innerHTML = 'Assim que o Mercado Pago confirmar a assinatura, enviamos a chave para o e-mail da sua conta do Mercado Pago (confira também o spam). Se não cancelar a assinatura, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre. ' + semId;
+  if (/^[0-9a-f]{32}$/.test(sub || '')) post('/assinatura', { assinatura: sub }).catch(() => {});
   $('obrigado').scrollIntoView();
 } else if (/^[0-9a-f]{32}$/.test(ref || '')) {
   store.set('dga-ref', ref);
@@ -499,8 +491,10 @@ $('recForm').addEventListener('submit', async e => {
   m.textContent = 'Procurando…';
   try {
     const r = assinatura ? await post('/assinatura', { assinatura: pagamento }) : await post('/recuperar', { pagamento });
-    if (r.chave) { m.textContent = 'Encontramos sua compra. Sua chave:'; showKey($('recKey'), r.chave); }
-    else m.textContent = r.status === 400 ? 'Confira o número da operação (só números).' : 'Não encontramos uma compra com esse número.';
+    // o servidor nunca devolve a chave aqui: manda para o e-mail do comprador no Mercado Pago
+    if (r.ok) m.textContent = 'Se o pagamento existir, enviamos a chave para o e-mail do comprador (o da conta do Mercado Pago). Confira também o spam.';
+    else m.textContent = r.status === 429 ? 'Muitas tentativas. Espere alguns minutos e tente de novo.' : r.status === 400 ? 'Confira o número da operação (só números).' : 'Não foi possível consultar agora. Tente de novo.';
   } catch { m.textContent = 'Não foi possível consultar agora. Tente de novo.'; }
   btn.disabled = false;
 });
+// Assinatura (não remover): PS-2026-11-03-d0d36ea91566
