@@ -281,7 +281,7 @@
     <label>Para confirmar, digite EXCLUIR<input id="excluirTxt" autocomplete="off"></label>
     <p><button class="btn alt" type="button" id="excluirBtn" disabled>Excluir conta</button></p>
   </details>
-  <p class="note">Guardamos o e-mail da sua conta, o identificador da conta no Firebase (Google), as chaves emitidas, quantos PCs estão ativados e as datas de criação, compra, teste e revogação. Não guardamos cartão: o pagamento é feito no Mercado Pago. Usamos esses dados só para ligar sua compra e seu teste à sua licença e para mostrar sua chave em Minha licença. Mantemos enquanto a conta existir. Para excluir a conta e os dados, use o botão Excluir conta em Minha licença. Os registros de pagamento ficam no Mercado Pago pelo prazo que a lei exige.</p>
+  <p class="note">Guardamos o e-mail da sua conta, o identificador da conta no Firebase (Google), as chaves emitidas, quantos PCs estão ativados e as datas de criação, compra, teste e revogação. Não guardamos cartão: o pagamento é feito no Mercado Pago. Usamos esses dados só para ligar sua compra e seu teste à sua licença e para mostrar sua chave em Minha licença. Mantemos enquanto a conta existir. Para excluir a conta e os dados, use o botão Excluir conta em Minha licença. Os registros de pagamento ficam no Mercado Pago pelo prazo que a lei exige. Se você aceitar os cookies, o Google Analytics registra as visitas, de onde elas vieram e os cliques em teste e download, sem e-mail nem dados da conta.</p>
 </section>
 
 <section id="obrigado" class="lic dark" hidden aria-live="polite">
@@ -316,9 +316,14 @@
       <p>Problemas e sugestões<br><a href="https://github.com/piressoftwares/dga-conversor/issues">github.com/piressoftwares/dga-conversor</a></p>
       <p>Usa LibreOffice (MPL 2.0) e FFmpeg (GPL), que vêm no instalador.</p>
     </div>
-    <p class="legal">© 2026 Pires Softwares · DGA Conversor</p>
+    <p class="legal">© 2026 Pires Softwares · DGA Conversor<span id="cookiesLink" hidden> · <a href="#">Cookies</a></span></p>
   </div>
 </footer>
+
+<div class="cookies" id="cookies" role="region" aria-label="Aviso de cookies" hidden>
+  <p>Usamos o Google Analytics para saber quais vídeos e páginas trazem visitas. Ele só é ativado se você aceitar.</p>
+  <p><button class="btn" type="button" data-cookies="sim">Aceitar</button> <button class="btn alt" type="button" data-cookies="nao">Recusar</button></p>
+</div>
 
 <script src="assets/rodas.js"></script>
 <script src="site.js"></script>

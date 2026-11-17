@@ -514,6 +514,7 @@ async function ligarTeste(sub) {
   const ob = $('obMsg');
   let r;
   try { r = await api('/assinatura', { assinatura: sub }); } catch { r = {}; }
+  if (r.chave) evento('teste_confirmado');
   if (r.chave) ob.textContent = 'Sua chave está na sua conta, em Minha licença. Se não cancelar a assinatura no Mercado Pago, cobramos R$ 59 uma vez no 8º dia e a licença fica sua para sempre.';
   else if (r.pendente) ob.textContent = 'O Mercado Pago ainda está confirmando o cartão. Em alguns instantes a chave aparece na sua conta, em Minha licença.';
   else ob.textContent = r.status === 429 ? 'Muitas tentativas. Espere alguns minutos e abra Minha licença.' : 'Não encontramos este teste na sua conta. Entre com a mesma conta em que você clicou em “Começar 7 dias grátis”.';
@@ -624,6 +625,45 @@ document.addEventListener('click', async e => {
   catch { getSelection().selectAllChildren(k); b.textContent = 'Selecionada: Ctrl+C'; }
   setTimeout(() => { b.textContent = 'Copiar chave'; }, 2500);
 });
+
+// Google Analytics 4: só carrega com GA_ID preenchido e cookies aceitos (aviso #cookies). Sem GA_ID, nada aparece.
+// Eventos: iniciar_teste (clique em "Começar 7 dias grátis"), baixar (clique no instalador), teste_confirmado (chave emitida).
+var GA_ID = 'G-E8Q60CNMLM';
+var gaOn = false;
+function gaStart() {
+  if (gaOn || !GA_ID) return;
+  gaOn = true;
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', GA_ID);
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+  document.head.appendChild(s);
+}
+function evento(nome, dados) { if (gaOn) window.gtag('event', nome, dados || {}); }
+if (GA_ID) {
+  const escolha = store.get('dga-cookies');
+  if (escolha === 'sim') gaStart();
+  else if (!escolha) $('cookies').hidden = false;
+  $('cookiesLink').hidden = false;
+}
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-cookies]');
+  if (c) {
+    const sim = c.dataset.cookies === 'sim';
+    store.set('dga-cookies', sim ? 'sim' : 'nao');
+    $('cookies').hidden = true;
+    if (sim) gaStart(); else if (gaOn) location.reload(); // recusou depois de aceitar: recarrega sem o GA
+    return;
+  }
+  if (e.target.closest('#cookiesLink')) { e.preventDefault(); $('cookies').hidden = false; return; }
+  const t = e.target.closest('[data-teste]');
+  if (t) evento('iniciar_teste', { local: t.closest('section, nav')?.id || 'topo' });
+  const d = e.target.closest('a[href*="DGA-Conversor-Setup.exe"]');
+  if (d) evento('baixar', { local: d.closest('section, nav')?.id || 'topo' });
+}, true);
 
 // volta dos 7 dias grátis: ?teste=1&preapproval_id=<32 hex>; o id sai da barra de endereço e fica guardado até ligar à conta
 const qs = new URLSearchParams(location.search), sub = qs.get('preapproval_id');
