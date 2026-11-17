@@ -628,7 +628,7 @@ document.addEventListener('click', async e => {
 
 // Google Analytics 4: só carrega com GA_ID preenchido e cookies aceitos (aviso #cookies). Sem GA_ID, nada aparece.
 // Eventos: iniciar_teste (clique em "Começar 7 dias grátis"), baixar (clique no instalador), teste_confirmado (chave emitida).
-var GA_ID = '';
+var GA_ID = 'G-E8Q60CNMLM';
 var gaOn = false;
 function gaStart() {
   if (gaOn || !GA_ID) return;
